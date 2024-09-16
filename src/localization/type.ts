@@ -61,8 +61,11 @@ export interface Settings {
     share_vpn_desc: string;
     dns: string;
     dns_desc: string;
+    dns_error: string;
     ip_data: string;
     ip_data_desc: string;
+    data_usage: string;
+    data_usage_desc: string;
     dark_mode: string;
     dark_mode_desc: string;
     lang: string;
@@ -73,6 +76,10 @@ export interface Settings {
     auto_connect_desc: string;
     system_tray: string;
     system_tray_desc: string;
+    force_close: string;
+    force_close_desc: string;
+    shortcut: string;
+    shortcut_desc: string;
     restore: string;
     restore_desc: string;
     scanner: string;
@@ -89,6 +96,8 @@ export interface Settings {
     routing_rules_desc: string;
     routing_rules_disabled: string;
     routing_rules_items: string;
+    profile: string;
+    profile_desc: string;
 }
 
 export interface Tabs {
@@ -110,6 +119,13 @@ export interface Modal {
     routing_rules_sample: string;
     endpoint_default: string;
     endpoint_suggested: string;
+    endpoint_latest: string;
+    endpoint_update: string;
+    endpoint_paste: string;
+    profile_title: string;
+    profile_name: string;
+    profile_endpoint: string;
+    profile_limitation: (value: string) => string;
     confirm: string;
     update: string;
     cancel: string;
@@ -128,12 +144,15 @@ export interface Log {
     error_port_already_in_use: (value: string) => string;
     error_port_socket: string;
     error_unknown_flag: string;
+    error_country_failed: string;
     error_deadline_exceeded: string;
     error_configuration_encountered: string;
     error_desktop_not_supported: string;
     error_configuration_not_supported: string;
     error_configuring_proxy: (value: string) => string;
     error_wp_not_found: string;
+    error_wp_stopped: string;
+    error_connection_failed: string;
 }
 
 export interface About {
@@ -154,6 +173,7 @@ export interface SystemTray {
     settings_app: string;
     about: string;
     log: string;
+    speed_test: string;
     exit: string;
 }
 
@@ -162,6 +182,18 @@ export interface Update {
     available_message: (value: string) => string;
     ready: string;
     ready_message: (value: string) => string;
+}
+
+export interface SpeedTest {
+    title: string;
+    initializing: string;
+    click_start: string;
+    error_msg: string;
+    server_unavailable: string;
+    download_speed: string;
+    upload_speed: string;
+    latency: string;
+    jitter: string;
 }
 
 export interface Language {
@@ -176,4 +208,5 @@ export interface Language {
     about: About;
     systemTray: SystemTray;
     update: Update;
+    speedTest: SpeedTest;
 }

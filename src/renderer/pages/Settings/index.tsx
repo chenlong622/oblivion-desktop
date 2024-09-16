@@ -1,11 +1,8 @@
 import classNames from 'classnames';
-import Lottie from 'lottie-react';
 import { Toaster } from 'react-hot-toast';
 import Nav from '../../components/Nav';
 import Tabs from '../../components/Tabs';
 import LicenseModal from '../../components/Modal/License';
-import { countries } from '../../../defaultSettings';
-import LottieFile from '../../../../assets/json/1713988096625.json';
 import useSettings from './useSettings';
 import Dropdown from '../../components/Dropdown';
 
@@ -15,6 +12,9 @@ export default function Settings() {
         license,
         location,
         method,
+        methodIsGool,
+        methodIsPsiphon,
+        methodIsWarp,
         onChangeLocation,
         onCloseLicenseModal,
         onEnableGool,
@@ -26,20 +26,12 @@ export default function Settings() {
         onKeyDownWarp,
         onOpenLicenseModal,
         setLicense,
-        showLicenseModal
+        showLicenseModal,
+        loading,
+        locationItems
     } = useSettings();
-    if (
-        typeof location === 'undefined' ||
-        typeof license === 'undefined' ||
-        typeof method === 'undefined'
-    )
-        return (
-            <div className='settings'>
-                <div className='lottie'>
-                    <Lottie animationData={LottieFile} loop={true} />
-                </div>
-            </div>
-        );
+
+    if (loading) return <div className='settings' />;
 
     return (
         <>
@@ -57,7 +49,7 @@ export default function Settings() {
                 }}
             />*/}
             <LicenseModal
-                license={license}
+                license={license || ''}
                 setLicense={setLicense}
                 title={appLang?.modal?.license_title}
                 isOpen={showLicenseModal}
@@ -102,61 +94,49 @@ export default function Settings() {
                     </div>*/}
                     <div className='grouped' role='radiogroup'>
                         <div
-                            role='presentation'
+                            role='button'
                             className={classNames('item')}
                             onClick={onEnableWarp}
                             onKeyDown={onKeyDownWarp}
+                            tabIndex={0}
                         >
-                            <label
-                                className='key'
-                                htmlFor='flex-switch-check-checked'
-                                // role='label'
-                            >
+                            <label className='key' htmlFor='flex-switch-check-checked'>
                                 {appLang?.settings?.method_warp}
                             </label>
                             <div className='value' id='flex-switch-check-checked'>
                                 <div
                                     tabIndex={-1}
-                                    className={classNames('switch', method === '' ? 'checked' : '')}
+                                    className={classNames('switch', methodIsWarp ? 'checked' : '')}
                                 />
                             </div>
                             <div className='info'>{appLang?.settings?.method_warp_desc}</div>
                         </div>
                         <div
-                            role='presentation'
+                            role='button'
                             className={classNames('item')}
                             onClick={onEnableGool}
                             onKeyDown={onKeyDownGool}
+                            tabIndex={0}
                         >
-                            <label
-                                className='key'
-                                htmlFor='flex-switch-check-checked-gool'
-                                // role='label'
-                            >
+                            <label className='key' htmlFor='flex-switch-check-checked-gool'>
                                 {appLang?.settings?.method_gool}
                             </label>
                             <div className='value' id='flex-switch-check-checked-gool'>
                                 <div
                                     tabIndex={-1}
-                                    className={classNames(
-                                        'switch',
-                                        method === 'gool' ? 'checked' : ''
-                                    )}
+                                    className={classNames('switch', methodIsGool ? 'checked' : '')}
                                 />
                             </div>
                             <div className='info'>{appLang?.settings?.method_gool_desc}</div>
                         </div>
                         <div
-                            role='presentation'
+                            role='button'
                             className={classNames('item')}
                             onClick={onEnablePsiphon}
                             onKeyDown={onKeyDownPsiphon}
+                            tabIndex={0}
                         >
-                            <label
-                                className='key'
-                                htmlFor='flex-switch-check-checked-psiphon'
-                                // role='label'
-                            >
+                            <label className='key' htmlFor='flex-switch-check-checked-psiphon'>
                                 {appLang?.settings?.method_psiphon}
                             </label>
                             <div className='value' id='flex-switch-check-checked-psiphon'>
@@ -164,28 +144,22 @@ export default function Settings() {
                                     tabIndex={-1}
                                     className={classNames(
                                         'switch',
-                                        method === 'psiphon' ? 'checked' : ''
+                                        methodIsPsiphon ? 'checked' : ''
                                     )}
                                 />
                             </div>
                             <div className='info'>{appLang?.settings?.method_psiphon_desc}</div>
                         </div>
                     </div>
-                    <div className={classNames('item', method === 'psiphon' ? '' : 'disabled')}>
+                    <div className={classNames('item', methodIsPsiphon ? '' : 'disabled')}>
                         <Dropdown
                             id='flex-switch-check-checked-psiphon-location'
                             onChange={onChangeLocation}
-                            value={location}
+                            value={location || ''}
                             label={appLang?.settings?.method_psiphon_location}
                             tabIndex={-1}
                             disabled={method !== 'psiphon'}
-                            items={[
-                                {
-                                    value: '',
-                                    label: appLang?.settings?.method_psiphon_location_auto
-                                },
-                                ...countries
-                            ]}
+                            items={locationItems}
                         />
                         <div className='info'>
                             {appLang?.settings?.method_psiphon_location_desc}
@@ -196,7 +170,7 @@ export default function Settings() {
                     <i className='material-icons'>&#xe313;</i>
                     {appLang?.settings?.more}
                 </div>
-                <div className='settings' role='menu'>
+                <div className='settings' role='menu' tabIndex={0}>
                     {/*<div
                         className={classNames('item')}
                         onClick={() => {
@@ -210,16 +184,13 @@ export default function Settings() {
                         <div className='info'>{appLang?.settings?.endpoint_desc}</div>
                     </div>*/}
                     <div
-                        role='presentation'
+                        role='button'
                         className='item'
                         onClick={onOpenLicenseModal}
                         onKeyDown={onKeyDownLicense}
+                        tabIndex={0}
                     >
-                        <label
-                            className='key'
-                            htmlFor='flex-switch-check-checked-license'
-                            // role='label'
-                        >
+                        <label className='key' htmlFor='flex-switch-check-checked-license'>
                             {appLang?.settings?.license}
                         </label>
                         <div className='value' role='link'>

@@ -10,7 +10,10 @@ export type Channels =
     | 'guide-toast'
     | 'tray-icon'
     | 'tray-menu'
-    | 'localization';
+    | 'localization'
+    | 'startup'
+    | 'check-speed'
+    | 'speed-stats';
 
 const electronHandler = {
     ipcRenderer: {

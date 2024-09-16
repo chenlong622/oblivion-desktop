@@ -1,4 +1,4 @@
-import { ChangeEvent, KeyboardEvent, useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, KeyboardEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../../store';
 import useGoBackOnEscape from '../../hooks/useGoBackOnEscape';
@@ -7,16 +7,25 @@ import { defaultSettings } from '../../../defaultSettings';
 import { settingsHaveChangedToast } from '../../lib/toasts';
 import { ipcRenderer } from '../../lib/utils';
 import useTranslate from '../../../localization/useTranslate';
+import { toPersianNumber } from '../../lib/toPersianNumber';
+
+export type Profile = {
+    endpoint: string;
+    name: string;
+};
 
 const useScanner = () => {
     const { isConnected, isLoading } = useStore();
     const appLang = useTranslate();
 
     const [endpoint, setEndpoint] = useState<string>();
+    const [profiles, setProfiles] = useState<Profile[]>([]);
     const [showEndpointModal, setShowEndpointModal] = useState<boolean>(false);
+    const [showProfileModal, setShowProfileModal] = useState<boolean>(false);
     const [ipType, setIpType] = useState<undefined | string>();
     const [rtt, setRtt] = useState<undefined | string>();
     const [reserved, setReserved] = useState<undefined | boolean>();
+    const [lang, setLang] = useState<string>('');
 
     const navigate = useNavigate();
 
@@ -35,6 +44,16 @@ const useScanner = () => {
         settings.get('reserved').then((value) => {
             setReserved(typeof value === 'undefined' ? defaultSettings.reserved : value);
         });
+        settings.get('profiles').then((value) => {
+            setProfiles(
+                typeof value === 'undefined'
+                    ? JSON.parse(defaultSettings.profiles)
+                    : JSON.parse(value)
+            );
+        });
+        settings.get('lang').then((value) => {
+            setLang(typeof value === 'undefined' ? defaultSettings.lang : value);
+        });
 
         ipcRenderer.on('tray-menu', (args: any) => {
             if (args.key === 'changePage') {
@@ -45,8 +64,7 @@ const useScanner = () => {
 
     const onCloseEndpointModal = useCallback(() => {
         setShowEndpointModal(false);
-        settingsHaveChangedToast({ ...{ isConnected, isLoading, appLang } });
-    }, [isConnected, isLoading, appLang]);
+    }, []);
 
     const onOpenEndpointModal = useCallback(() => setShowEndpointModal(true), []);
 
@@ -92,6 +110,92 @@ const useScanner = () => {
         },
         [onClickReservedButton]
     );
+
+    const onCloseProfileModal = useCallback(() => {
+        setShowProfileModal(false);
+    }, []);
+
+    const onOpenProfileModal = useCallback(() => setShowProfileModal(true), []);
+
+    const onKeyDownProfile = useCallback(
+        (e: KeyboardEvent<HTMLDivElement>) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                onOpenProfileModal();
+            }
+        },
+        [onOpenProfileModal]
+    );
+
+    const countProfiles = useCallback(
+        (value: number) => {
+            return value > 0
+                ? (lang === 'fa' ? toPersianNumber(value) : value) +
+                      ' ' +
+                      (appLang?.settings?.routing_rules_items || '')
+                : appLang?.settings?.routing_rules_disabled;
+        },
+        [appLang?.settings?.routing_rules_disabled, appLang?.settings?.routing_rules_items, lang]
+    );
+
+    const ipSelectorItems = useMemo(
+        () => [
+            {
+                value: '',
+                label: appLang?.settings?.scanner_ip_type_auto
+            },
+            { value: '-4', label: 'IPv4' },
+            {
+                value: '-6',
+                label: 'IPv6'
+            }
+        ],
+        [appLang?.settings?.scanner_ip_type_auto]
+    );
+
+    const rttSelectorItems = useMemo(
+        () => [
+            {
+                value: '1s',
+                label: appLang?.settings?.scanner_rtt_default
+            },
+            {
+                value: '300ms',
+                label: '300ms'
+            },
+            {
+                value: '500ms',
+                label: '500ms'
+            },
+            {
+                value: '750ms',
+                label: '750ms'
+            },
+            {
+                value: '1s',
+                label: '1s'
+            },
+            {
+                value: '2s',
+                label: '2s'
+            },
+            {
+                value: '3s',
+                label: '3s'
+            }
+        ],
+        [appLang?.settings?.scanner_rtt_default]
+    );
+
+    const isDefaultEndpoint = useMemo(() => endpoint === defaultSettings.endpoint, [endpoint]);
+
+    const loading =
+        typeof endpoint === 'undefined' ||
+        typeof profiles === 'undefined' ||
+        typeof ipType === 'undefined' ||
+        typeof rtt === 'undefined' ||
+        typeof reserved === 'undefined';
+
     return {
         endpoint,
         ipType,
@@ -99,6 +203,10 @@ const useScanner = () => {
         reserved,
         appLang,
         showEndpointModal,
+        loading,
+        ipSelectorItems,
+        rttSelectorItems,
+        isDefaultEndpoint,
         onCloseEndpointModal,
         onOpenEndpointModal,
         onKeyDownEndpoint,
@@ -106,7 +214,14 @@ const useScanner = () => {
         onChangeRTT,
         onClickReservedButton,
         onKeyDownReservedButton,
-        setEndpoint
+        setEndpoint,
+        profiles,
+        setProfiles,
+        showProfileModal,
+        onOpenProfileModal,
+        onCloseProfileModal,
+        onKeyDownProfile,
+        countProfiles
     };
 };
 export default useScanner;

@@ -59,10 +59,13 @@ const english: Language = {
         port_desc: 'Define application proxy port',
         share_vpn: 'Share (LAN)',
         share_vpn_desc: 'Share a proxy on the network',
-        dns: 'Change DNS',
-        dns_desc: 'Use Google Public DNS',
+        dns: 'DNS',
+        dns_desc: 'Block ads & adult content',
+        dns_error: 'It is applicable to the Warp & Gool methods',
         ip_data: 'IP Check',
         ip_data_desc: 'Display IP & location after connection',
+        data_usage: 'Data Usage',
+        data_usage_desc: 'Display data usage & real-time speed',
         dark_mode: 'Dark Mode',
         dark_mode_desc: 'Specify the display mode of the application',
         lang: 'Language',
@@ -73,6 +76,10 @@ const english: Language = {
         auto_connect_desc: 'Connect when app opens',
         system_tray: 'System Tray',
         system_tray_desc: 'Not placing the program icon in the taskbar',
+        force_close: 'Force Close',
+        force_close_desc: 'Do not stay in the system tray upon exit',
+        shortcut: 'Navigator',
+        shortcut_desc: 'Shortcuts on the home page',
         restore: 'Restore',
         restore_desc: 'Apply default application settings',
         scanner: 'Scanner Settings',
@@ -88,7 +95,9 @@ const english: Language = {
         routing_rules: 'Blacklist',
         routing_rules_desc: 'Prevent traffic from going through warp',
         routing_rules_disabled: 'Disabled',
-        routing_rules_items: 'Items'
+        routing_rules_items: 'Items',
+        profile: 'Profile',
+        profile_desc: 'Endpoints saved by you'
     },
     tabs: {
         home: 'Connect',
@@ -109,7 +118,14 @@ const english: Language = {
             'By confirming the operation of restoring the changes, all program settings will return to the default state and your connection will be disconnected.',
         routing_rules_sample: 'Sample',
         endpoint_default: 'Default',
-        endpoint_suggested: 'suggested',
+        endpoint_suggested: 'Suggested',
+        endpoint_latest: 'Latest',
+        endpoint_update: 'Receive suggested endpoints',
+        endpoint_paste: 'Paste active endpoint',
+        profile_title: 'Profile',
+        profile_name: 'Title',
+        profile_endpoint: 'Endpoint',
+        profile_limitation: (value) => `You can add a maximum of ${value} endpoints.`,
         confirm: 'I confirm',
         update: 'Update',
         cancel: 'Cancel'
@@ -134,7 +150,10 @@ const english: Language = {
         error_configuration_not_supported:
             'Proxy configuration is not supported in your operating system, but you can use Warp Proxy manually.',
         error_configuring_proxy: (value) => `Error configuring proxy for ${value}!`,
-        error_wp_not_found: 'The warp-plus file is not located alongside the application package!'
+        error_wp_not_found: 'The warp-plus file is not located alongside the application package!',
+        error_wp_stopped: 'The warp-plus file has encountered an issue running!',
+        error_connection_failed: 'Connection to 1.1.1.1 was not possible.',
+        error_country_failed: 'Cannot connect to the selected country.'
     },
     about: {
         title: 'About App',
@@ -153,6 +172,7 @@ const english: Language = {
         settings_app: 'Application',
         about: 'About',
         log: 'Log',
+        speed_test: 'Speed test',
         exit: 'Exit'
     },
     update: {
@@ -162,6 +182,17 @@ const english: Language = {
         ready: 'Update Ready',
         ready_message: (value) =>
             `A new version of the ${value} is ready. It will be installed after a restart. Do you want to restart now?`
+    },
+    speedTest: {
+        title: 'Speed Test',
+        initializing: 'Speed test initializing ...',
+        click_start: 'Click the button to start the speed test',
+        error_msg: 'An error occurred during the speed test. Please try again.',
+        server_unavailable: 'Speed test server unavailable',
+        download_speed: 'Download Speed',
+        upload_speed: 'Upload Speed',
+        latency: 'Latency',
+        jitter: 'Jitter'
     }
 };
 export default english;

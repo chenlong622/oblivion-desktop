@@ -59,10 +59,13 @@ const chinese: Language = {
         port_desc: '定义应用的代理端口',
         share_vpn: '允许局域网连接',
         share_vpn_desc: '在局域网上共享代理',
-        dns: '更改 DNS',
-        dns_desc: '使用 Google 公共 DNS',
+        dns: 'DNS',
+        dns_desc: '屏蔽广告和成人内容',
+        dns_error: '适用于 Warp 和 Gool 方法',
         ip_data: '解析目标地址',
         ip_data_desc: '连接后显示 IP 和位置',
+        data_usage: '数据使用量',
+        data_usage_desc: '显示数据使用量和实时速度',
         dark_mode: '深色模式',
         dark_mode_desc: '定义应用主题模式',
         lang: '语言',
@@ -73,6 +76,10 @@ const chinese: Language = {
         auto_connect_desc: '应用程序打开时连接',
         system_tray: '隐藏系统托盘',
         system_tray_desc: '不在任务栏显示应用图标',
+        force_close: '强制关闭',
+        force_close_desc: '退出时不要停留在系统托盘中',
+        shortcut: '导航器',
+        shortcut_desc: '主页上的快捷方式',
         restore: '恢复默认设置',
         restore_desc: '将应用设置还原为默认值',
         scanner: '扫描仪设置',
@@ -88,7 +95,9 @@ const chinese: Language = {
         routing_rules: '黑名单',
         routing_rules_desc: '阻止 Warp 的流量通过',
         routing_rules_disabled: '已禁用',
-        routing_rules_items: '项目'
+        routing_rules_items: '项目',
+        profile: '个人资料',
+        profile_desc: '您保存的端点'
     },
     tabs: {
         home: '连接',
@@ -109,6 +118,13 @@ const chinese: Language = {
         routing_rules_sample: '示例',
         endpoint_default: '默认',
         endpoint_suggested: '建议',
+        endpoint_latest: '最新的',
+        endpoint_update: '接收建议的端点',
+        endpoint_paste: '粘贴活动端点',
+        profile_title: '个人资料',
+        profile_name: '标题',
+        profile_endpoint: '端点',
+        profile_limitation: (value) => `您最多可以添加 ${value} 个端点。`,
         confirm: '确认',
         update: '更新',
         cancel: '取消'
@@ -132,7 +148,10 @@ const chinese: Language = {
         error_configuration_not_supported:
             '您的操作系统不支持代理配置，但您可以手动使用 Warp 代理。',
         error_configuring_proxy: (value) => `为 ${value} 配置代理时出错！`,
-        error_wp_not_found: 'warp-plus 文件不在应用程序包旁边。'
+        error_wp_not_found: 'warp-plus 文件不在应用程序包旁边。',
+        error_wp_stopped: 'warp-plus 文件在运行时遇到了问题！',
+        error_connection_failed: '无法连接到1.1.1.1。',
+        error_country_failed: '无法连接到所选国家.'
     },
     about: {
         title: '关于应用',
@@ -151,6 +170,7 @@ const chinese: Language = {
         settings_app: '应用程序',
         about: '关于',
         log: '日志',
+        speed_test: '速度测试',
         exit: '退出'
     },
     update: {
@@ -159,6 +179,17 @@ const chinese: Language = {
         ready: '更新已准备好',
         ready_message: (value) =>
             `新的 ${value} 版本已准备好。它将在重新启动后安装。您想现在重新启动吗？`
+    },
+    speedTest: {
+        title: '速度测试',
+        initializing: '速度测试初始化中 ...',
+        click_start: '点击按钮开始速度测试',
+        error_msg: '速度测试期间发生错误。请再试一次。',
+        server_unavailable: '速度测试服务器不可用',
+        download_speed: '下载速度',
+        upload_speed: '上传速度',
+        latency: '延迟',
+        jitter: '抖动'
     }
 };
 export default chinese;

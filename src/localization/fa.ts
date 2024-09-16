@@ -59,10 +59,13 @@ const persian: Language = {
         port_desc: 'تعیین پورت پروکسی برنامه',
         share_vpn: 'اتصال از LAN',
         share_vpn_desc: 'اشتراک\u200Cگذاری پروکسی بر روی شبکه',
-        dns: 'تغییر DNS',
-        dns_desc: 'استفاده از DNS عمومی گوگل',
+        dns: 'انتخاب DNS',
+        dns_desc: 'محدودسازی تبلیغات و محتوای بزرگسال',
+        dns_error: 'برای متدهای Warp و Gool کاربرد دارد',
         ip_data: 'بررسی IP',
         ip_data_desc: 'نمایش آی\u200Cپی و لوکیشن پس\u200Cاز اتصال',
+        data_usage: 'مصرف داده',
+        data_usage_desc: 'نمایش لحظه‌ای سرعت و مصرف داده',
         dark_mode: 'حالت تیره',
         dark_mode_desc: 'مشخص\u200Cکردن حالت نمایش برنامه',
         lang: 'زبان برنامه',
@@ -73,6 +76,10 @@ const persian: Language = {
         auto_connect_desc: 'متصل‌شدن هنگام بازشدن برنامه',
         system_tray: 'مخفی\u200Cسازی',
         system_tray_desc: 'قرار نگرفتن آیکون برنامه در تسک\u200Cبار',
+        force_close: 'بستن اجباری',
+        force_close_desc: 'با خروج در نوار اعلان قرار نگیرد',
+        shortcut: 'پیمایشگر',
+        shortcut_desc: 'میانبرها در صفحه نخست',
         restore: 'بازگردانی',
         restore_desc: 'اعمال تنظیمات پیشفرض برنامه',
         scanner: 'تنظیمات اسکنر',
@@ -89,7 +96,9 @@ const persian: Language = {
         routing_rules: 'لیست سیاه',
         routing_rules_desc: 'جلوگیری از عبور ترافیک از وارپ',
         routing_rules_disabled: 'غیرفعال',
-        routing_rules_items: 'مورد'
+        routing_rules_items: 'مورد',
+        profile: 'پروفایل',
+        profile_desc: 'اندپوینت‌های ذخیره‌شده توسط شما'
     },
     tabs: {
         home: 'اتصال',
@@ -111,6 +120,13 @@ const persian: Language = {
         routing_rules_sample: 'نمونه',
         endpoint_default: 'پیشفرض',
         endpoint_suggested: 'پیشنهادی',
+        endpoint_latest: 'اخیر',
+        endpoint_update: 'دریافت اندپوینت‌های پیشنهادی',
+        endpoint_paste: 'جایگذاری اندپوینت فعال',
+        profile_title: 'پروفایل',
+        profile_name: 'عنوان',
+        profile_endpoint: 'اندپوینت',
+        profile_limitation: (value) => `حداکثر می‌توانید ${value} اندپوینت اضافه نمایید.`,
         confirm: 'تایید می\u200Cکنم',
         update: 'بروزرسانی',
         cancel: 'انصراف'
@@ -136,7 +152,10 @@ const persian: Language = {
         error_configuration_not_supported:
             'پیکربندی پروکسی در سیستم عامل شما پشتیبانی نمی‌شود، اما می‌توانید به‌صورت دستی از پروکسی وارپ استفاده کنید.',
         error_configuring_proxy: (value) => `خطای پیکربندی پروکسی برای ${value}!`,
-        error_wp_not_found: `فایل warp-plus در کنار بسته برنامه وجود ندارد!`
+        error_wp_not_found: `فایل warp-plus در کنار بسته برنامه وجود ندارد!`,
+        error_wp_stopped: `فایل warp-plus برای اجرا با مشکل مواجه است!`,
+        error_connection_failed: 'اتصال به 1.1.1.1 امکان‌پذیر نبود.',
+        error_country_failed: 'امکان اتصال به کشور انتخابی وجود ندارد.'
     },
     about: {
         title: 'درباره برنامه',
@@ -155,6 +174,7 @@ const persian: Language = {
         settings_app: '   برنامه   ',
         about: 'درباره',
         log: 'لاگ',
+        speed_test: 'تست سرعت',
         exit: 'خروج'
     },
     update: {
@@ -163,6 +183,17 @@ const persian: Language = {
         ready: 'دریافت شد',
         ready_message: (value) =>
             `برنامه ${value} برای آغاز فرایند بروزرسانی آماده است. راه‌اندازی شود؟`
+    },
+    speedTest: {
+        title: 'تست سرعت',
+        initializing: 'درحال آماده‌سازی ...',
+        click_start: 'برای شروع تست کلیک کنید',
+        error_msg: 'هنگام تست سرعت خطایی رخ داده؛ لطفا دوباره تلاش کنید.',
+        server_unavailable: 'سرور تست سرعت در دسترس نیست',
+        download_speed: 'سرعت دانلود',
+        upload_speed: 'سرعت آپلود',
+        latency: 'تاخیر',
+        jitter: 'نوسان'
     }
 };
 export default persian;

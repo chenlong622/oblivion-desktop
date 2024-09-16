@@ -2,21 +2,42 @@ import { FormEvent, KeyboardEvent, useCallback, useEffect, useState } from 'reac
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { useStore } from '../../store';
-//import { checkNewUpdate } from '../../lib/checkNewUpdate';
 import { settings } from '../../lib/settings';
 import { defaultSettings } from '../../../defaultSettings';
-import { ipcRenderer, onEscapeKeyPressed } from '../../lib/utils';
-import { checkInternetToast, defaultToast, defaultToastWithSubmitButton } from '../../lib/toasts';
-//import packageJsonData from '../../../../package.json';
+import { isDev, ipcRenderer, onEscapeKeyPressed, formatNetworkStat } from '../../lib/utils';
+import { defaultToast, defaultToastWithSubmitButton } from '../../lib/toasts';
+import { checkNewUpdate } from '../../lib/checkNewUpdate';
+import packageJsonData from '../../../../package.json';
 import { getLanguageName } from '../../../localization';
 import useTranslate from '../../../localization/useTranslate';
 
-let cachedIpInfo: any = null;
+export type IpConfig = {
+    countryCode: string | boolean;
+    ip: string;
+};
+
+let cachedIpInfo: IpConfig | null = null;
 let lastFetchTime = 0;
 const cacheDuration = 10 * 1000;
 let connectedToIrIPOnceDisplayed = false;
-//let canCheckNewVer = true;
-const hasNewUpdate = false;
+let canCheckNewVer = true;
+let hasNewUpdate = false;
+
+export interface SpeedStats {
+    currentDownload: { value: string; unit: string };
+    currentUpload: { value: string; unit: string };
+    totalDownload: { value: string; unit: string };
+    totalUpload: { value: string; unit: string };
+    totalUsage: { value: string; unit: string };
+}
+
+const defaultSpeedStats: SpeedStats = {
+    currentDownload: { value: 'N/A', unit: 'N/A' },
+    currentUpload: { value: 'N/A', unit: 'N/A' },
+    totalDownload: { value: 'N/A', unit: 'N/A' },
+    totalUpload: { value: 'N/A', unit: 'N/A' },
+    totalUsage: { value: 'N/A', unit: 'N/A' }
+};
 
 const useLanding = () => {
     const appLang = useTranslate();
@@ -30,14 +51,11 @@ const useLanding = () => {
         proxyStatus,
         setProxyStatus
     } = useStore();
-    const [ipInfo, setIpInfo] = useState<{
-        countryCode: string | boolean;
-        ip: string;
-    }>({
+    const [ipInfo, setIpInfo] = useState<IpConfig>({
         countryCode: false,
         ip: ''
     });
-    const [online, setOnline] = useState<boolean>(true);
+    const [online, setOnline] = useState<boolean>(navigator?.onLine);
 
     const [drawerIsOpen, setDrawerIsOpen] = useState(false);
     const toggleDrawer = () => {
@@ -52,12 +70,22 @@ const useLanding = () => {
     const [method, setMethod] = useState<string>('');
     const [ping, setPing] = useState<number>(0);
     const [proxyMode, setProxyMode] = useState<string>('');
+    const [shortcut, setShortcut] = useState<boolean>(false);
+    const [speeds, setSpeeds] = useState<SpeedStats>(defaultSpeedStats);
+    const [dataUsage, setDataUsage] = useState<boolean>(false);
 
     const navigate = useNavigate();
 
     const onChange = useCallback(() => {
-        if (!online) {
-            checkInternetToast(appLang?.toast?.offline);
+        if (!navigator.onLine) {
+            //checkInternetToast(appLang?.toast?.offline);
+            if (isConnected) {
+                ipcRenderer.sendMessage('wp-end');
+                setIsLoading(true);
+                toast.remove('ONLINE_STATUS');
+            } else {
+                defaultToast(appLang?.toast?.offline, 'ONLINE_STATUS', 7000);
+            }
         } else {
             if (isLoading) {
                 ipcRenderer.sendMessage('wp-end');
@@ -75,17 +103,17 @@ const useLanding = () => {
                 setPing(0);
             }
         }
-    }, [online, isLoading, isConnected, setIsLoading, proxyMode, setProxyStatus]);
+    }, [appLang?.toast?.offline, isLoading, isConnected, setIsLoading, setProxyStatus, proxyMode]);
 
-    /*const fetchReleaseVersion = async () => {
+    const fetchReleaseVersion = async () => {
         if (!isDev()) {
             try {
                 const response = await fetch(
-                    'https://api.github.com/repos/bepass-org/oblivion-desktop/releases'
+                    'https://api.github.com/repos/bepass-org/oblivion-desktop/releases/latest'
                 );
                 if (response.ok) {
                     const data = await response.json();
-                    const latestVersion = String(data[0]?.name);
+                    const latestVersion = String(data?.tag_name);
                     const appVersion = String(packageJsonData?.version);
                     if (latestVersion && checkNewUpdate(appVersion, latestVersion)) {
                         hasNewUpdate = true;
@@ -99,7 +127,7 @@ const useLanding = () => {
         } else {
             hasNewUpdate = false;
         }
-    };*/
+    };
 
     useEffect(() => {
         /*settings.get('theme').then((value) => {
@@ -123,12 +151,18 @@ const useLanding = () => {
         settings.get('proxyMode').then((value) => {
             setProxyMode(typeof value === 'undefined' ? defaultSettings.proxyMode : value);
         });
+        settings.get('shortcut').then((value) => {
+            setShortcut(typeof value === 'undefined' ? defaultSettings.shortcut : value);
+        });
+        settings.get('dataUsage').then((value) => {
+            setDataUsage(typeof value === 'undefined' ? defaultSettings.dataUsage : value);
+        });
 
         cachedIpInfo = null;
-        /*if (canCheckNewVer) {
+        if (canCheckNewVer) {
             fetchReleaseVersion();
             canCheckNewVer = false;
-        }*/
+        }
 
         ipcRenderer.on('guide-toast', (message: any) => {
             defaultToast(message, 'GUIDE', 7000);
@@ -166,9 +200,25 @@ const useLanding = () => {
         if (online) {
             toast.remove('ONLINE_STATUS');
         } else {
-            checkInternetToast(appLang?.toast?.offline);
+            //checkInternetToast(appLang?.toast?.offline);
+            defaultToast(appLang?.toast?.offline, 'ONLINE_STATUS', 7000);
         }
-    }, [online]);
+    }, [appLang?.toast?.offline, online]);
+
+    useEffect(() => {
+        if (isConnected && dataUsage) {
+            ipcRenderer.on('speed-stats', (event: any) => {
+                setSpeeds((prevSpeeds) => ({
+                    ...prevSpeeds,
+                    currentDownload: formatNetworkStat(event?.currentDownload),
+                    currentUpload: formatNetworkStat(event?.currentUpload),
+                    totalDownload: formatNetworkStat(event?.totalDownload),
+                    totalUpload: formatNetworkStat(event?.totalUpload),
+                    totalUsage: formatNetworkStat(event?.totalUsage)
+                }));
+            });
+        }
+    }, [dataUsage, isConnected]);
 
     const ipToast = async () => {
         if (connectedToIrIPOnceDisplayed) {
@@ -187,6 +237,10 @@ const useLanding = () => {
 
     const getPing = async () => {
         try {
+            if (!ipInfo?.countryCode) {
+                setPing(-1);
+                return;
+            }
             const started = window.performance.now();
             const http = new XMLHttpRequest();
             http.open('GET', 'http://cp.cloudflare.com', true);
@@ -311,6 +365,10 @@ const useLanding = () => {
             if (ok) {
                 setIsLoading(false);
                 setIsConnected(true);
+                ipcRenderer.sendMessage(
+                    'check-speed',
+                    proxyStatus !== 'none' && dataUsage && ipData
+                );
                 /*if (proxyStatus !== '') {
                     ipcRenderer.sendMessage('tray-icon', `connected-${proxyStatus}`);
                 }*/
@@ -325,6 +383,7 @@ const useLanding = () => {
                     countryCode: false,
                     ip: ''
                 });
+                ipcRenderer.sendMessage('check-speed', false);
                 /*if (proxyStatus !== '') {
                     ipcRenderer.sendMessage('tray-icon', 'disconnected');
                 }*/
@@ -401,7 +460,11 @@ const useLanding = () => {
         handleOnSwipedRight,
         handleOnClickIp,
         handleOnClickPing,
-        proxyStatus
+        proxyStatus,
+        appVersion: packageJsonData?.version,
+        shortcut,
+        speeds,
+        dataUsage
     };
 };
 export default useLanding;

@@ -14,6 +14,9 @@ const execPromise = promisify(exec);
 
 const { spawn } = require('child_process');
 
+let oldProxyHost = '';
+let oldProxyPort = '';
+
 const setRoutingRules = (value: any) => {
     const defValue =
         'localhost,127.*,10.*,172.16.*,172.17.*,172.18.*,172.19.*,172.20.*,172.21.*,172.22.*,172.23.*,172.24.*,172.25.*,172.26.*,172.27.*,172.28.*,172.29.*,172.30.*,172.31.*,192.168.*,<local>';
@@ -92,11 +95,29 @@ const enableGnomeProxy = async (ip: string, port: string, routingRules: any): Pr
         port: port
     };
 
+    exec(`gsettings get org.gnome.system.proxy.socks host`, (err, stdout) => {
+        oldProxyHost = stdout;
+        log.info(`Gnome old proxy host : ` + stdout);
+    });
+
+    exec(`gsettings get org.gnome.system.proxy.socks port`, (err, stdout) => {
+        oldProxyPort = stdout;
+        log.info(`Gnome old proxy port : ` + stdout);
+    });
+
     try {
         await execPromise(`gsettings set org.gnome.system.proxy mode '${proxySettings.mode}'`);
 
-        await execPromise(`gsettings set org.gnome.system.proxy.socks host ${proxySettings.host}`);
+        // reset other proxies in case user set it
+        await execPromise(`gsettings set org.gnome.system.proxy.http host ""`);
+        await execPromise(`gsettings set org.gnome.system.proxy.http port 0`);
+        await execPromise(`gsettings set org.gnome.system.proxy.https host ""`);
+        await execPromise(`gsettings set org.gnome.system.proxy.https port 0`);
+        await execPromise(`gsettings set org.gnome.system.proxy.ftp host ""`);
+        await execPromise(`gsettings set org.gnome.system.proxy.ftp port 0`);
 
+        // set socks proxy
+        await execPromise(`gsettings set org.gnome.system.proxy.socks host ${proxySettings.host}`);
         await execPromise(`gsettings set org.gnome.system.proxy.socks port ${proxySettings.port}`);
 
         // https://wiki.archlinux.org/title/Proxy_server#Proxy_settings_on_GNOME3
@@ -128,6 +149,9 @@ const enableGnomeProxy = async (ip: string, port: string, routingRules: any): Pr
 const disableGNOMEProxy = async (): Promise<void> => {
     try {
         await execPromise(`gsettings set org.gnome.system.proxy mode 'none'`);
+        await execPromise(`gsettings set org.gnome.system.proxy.socks host ${oldProxyHost}`);
+        await execPromise(`gsettings set org.gnome.system.proxy.socks port ${oldProxyPort}`);
+
         log.info('Proxy settings disabled for GNOME');
     } catch (err) {
         log.error(`Error disabling proxy settings for GNOME: ${err}`);
@@ -146,6 +170,19 @@ const enableKDEProxy = async (
         await execPromise(
             `kwriteconfig${v} --file kioslaverc --group "Proxy Settings" --key ProxyType 1`
         );
+
+        // reset other proxies in case user set it
+        await execPromise(
+            `kwriteconfig${v} --file kioslaverc --group "Proxy Settings" --key httpProxy '':0`
+        );
+        await execPromise(
+            `kwriteconfig${v} --file kioslaverc --group "Proxy Settings" --key httpsProxy '':0`
+        );
+        await execPromise(
+            `kwriteconfig${v} --file kioslaverc --group "Proxy Settings" --key ftpProxy '':0`
+        );
+
+        // set socks proxy
         await execPromise(
             `kwriteconfig${v} --file kioslaverc --group "Proxy Settings" --key socksProxy "${host}:${port}"`
         );

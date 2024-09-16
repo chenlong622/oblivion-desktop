@@ -1,10 +1,10 @@
 import { Toaster } from 'react-hot-toast';
-
 import 'react-modern-drawer/dist/index.css';
 import useLanding from './useLanding';
 import LandingDrawer from './LandingDrawer';
 import LandingHeader from './LandingHeader';
 import LandingBody from './LandingBody';
+import Tabs from '../../components/Tabs';
 
 export default function Landing() {
     const {
@@ -26,7 +26,11 @@ export default function Landing() {
         ping,
         statusText,
         toggleDrawer,
-        proxyStatus
+        proxyStatus,
+        appVersion,
+        shortcut,
+        speeds,
+        dataUsage
     } = useLanding();
 
     return (
@@ -42,6 +46,7 @@ export default function Landing() {
                 lang={lang}
                 toggleDrawer={toggleDrawer}
                 hasNewUpdate={hasNewUpdate}
+                appVersion={appVersion}
             />
             <LandingBody
                 appLang={appLang}
@@ -58,8 +63,16 @@ export default function Landing() {
                 proxyMode={proxyMode}
                 statusText={statusText}
                 proxyStatus={proxyStatus}
+                appVersion={appVersion}
+                speeds={speeds}
+                dataUsage={dataUsage}
             />
-            <Toaster position='bottom-center' reverseOrder={false} />
+            {(!isConnected || (isConnected && !ipData)) && shortcut && <Tabs active='landing' />}
+            <Toaster
+                position='bottom-center'
+                reverseOrder={false}
+                containerStyle={{ bottom: shortcut ? '70px' : '16px' }}
+            />
         </>
     );
 }

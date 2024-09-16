@@ -61,10 +61,13 @@ const deutsch: Language = {
         port_desc: 'Proxy-Port der Anwendungs festlegen',
         share_vpn: 'Freigeben (LAN)',
         share_vpn_desc: 'Proxy im Netzwerk freigeben',
-        dns: 'DNS ändern',
-        dns_desc: 'Google Public DNS verwenden',
+        dns: 'DNS',
+        dns_desc: 'Werbung und Inhalte für Erwachsene blockieren',
+        dns_error: 'Es ist auf die Warp- und Gool-Methoden anwendbar',
         ip_data: 'IP Check',
         ip_data_desc: 'IP & Standort nach herstellen der Verbindung anzeigen',
+        data_usage: 'Datennutzung',
+        data_usage_desc: 'Anzeige der Datennutzung und Echtzeitgeschwindigkeit',
         dark_mode: 'Dunkler Modus',
         dark_mode_desc: 'Anzeigemodus der Anwendung angeben',
         lang: 'Sprache',
@@ -75,6 +78,10 @@ const deutsch: Language = {
         auto_connect_desc: 'Verbinden, wenn App geöffnet wird',
         system_tray: 'System Tray',
         system_tray_desc: 'Not placing the program icon in the taskbar',
+        force_close: 'Erzwungenes Schließen',
+        force_close_desc: 'Nach dem Beenden nicht im System Tray bleiben',
+        shortcut: 'Navigator',
+        shortcut_desc: 'Verknüpfungen auf der Startseite',
         restore: 'Wiederherstellen',
         restore_desc: 'Einstellungen auf Standard zurücksetzen',
         scanner: 'Scannereinstellungen',
@@ -90,7 +97,9 @@ const deutsch: Language = {
         routing_rules: 'Schwarze Liste',
         routing_rules_desc: 'Verhindern Sie, dass Datenverkehr durch Warp geleitet wird',
         routing_rules_disabled: 'Deaktiviert',
-        routing_rules_items: 'Elemente'
+        routing_rules_items: 'Elemente',
+        profile: 'Profil',
+        profile_desc: 'Von Ihnen gespeicherte Endpunkte'
     },
     tabs: {
         home: 'Verbinden',
@@ -111,7 +120,14 @@ const deutsch: Language = {
             'Durch die Bestätigung des Vorgangs werden alle Programmeinstellungen auf den Standard zurückgesetzt und Ihre Verbindung wird getrennt.',
         routing_rules_sample: 'Beispiel',
         endpoint_default: 'Standard',
-        endpoint_suggested: 'empfohlen',
+        endpoint_suggested: 'Empfohlen',
+        endpoint_latest: 'Neueste',
+        endpoint_update: 'Empfohlene Endpunkte erhalten',
+        endpoint_paste: 'aktiven Endpunkt einfügen',
+        profile_title: 'Profil',
+        profile_name: 'Titel',
+        profile_endpoint: 'Endpunkt',
+        profile_limitation: (value) => `Sie können maximal ${value} Endpunkte hinzufügen.`,
         confirm: 'Ich bestätige',
         update: 'Update',
         cancel: 'Abbrechen'
@@ -137,7 +153,10 @@ const deutsch: Language = {
         error_configuration_not_supported:
             'Proxy-Konfiguration wird in Ihrem Betriebssystem nicht unterstützt, aber Sie können Warp Proxy manuell verwenden.',
         error_configuring_proxy: (value) => `Fehler beim Konfigurieren des Proxys für ${value}!`,
-        error_wp_not_found: 'Die Datei warp-plus befindet sich nicht neben dem Anwendungspaket.'
+        error_wp_not_found: 'Die Datei warp-plus befindet sich nicht neben dem Anwendungspaket.',
+        error_wp_stopped: 'Die Datei warp-plus hat ein Problem beim Ausführen!',
+        error_connection_failed: 'Verbindung zu 1.1.1.1 war nicht möglich.',
+        error_country_failed: 'Verbindung zum ausgewählten Land nicht möglich.'
     },
     about: {
         title: 'Über',
@@ -156,6 +175,7 @@ const deutsch: Language = {
         settings_app: 'Anwendung',
         about: 'Über',
         log: 'Protokoll',
+        speed_test: 'Geschwindigkeitstest',
         exit: 'Beenden'
     },
     update: {
@@ -165,6 +185,18 @@ const deutsch: Language = {
         ready: 'Update bereit',
         ready_message: (value) =>
             `Eine neue Version von ${value} ist bereit. Sie wird nach einem Neustart installiert. Möchten Sie jetzt neu starten?`
+    },
+    speedTest: {
+        title: 'Geschwindigkeitstest',
+        initializing: 'Geschwindigkeitstest wird initialisiert ...',
+        click_start: 'Klicken Sie auf die Schaltfläche, um den Geschwindigkeitstest zu starten',
+        error_msg:
+            'Während des Geschwindigkeitstests ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.',
+        server_unavailable: 'Geschwindigkeitstest-Server nicht verfügbar',
+        download_speed: 'Download-Geschwindigkeit',
+        upload_speed: 'Upload-Geschwindigkeit',
+        latency: 'Latenz',
+        jitter: 'Jitter'
     }
 };
 export default deutsch;

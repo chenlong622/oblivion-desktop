@@ -20,13 +20,15 @@ import {
     nativeImage,
     IpcMainEvent,
     globalShortcut,
-    dialog
+    powerMonitor
+    //dialog
 } from 'electron';
 import path from 'path';
 import fs from 'fs';
 import settings from 'electron-settings';
 import log from 'electron-log';
-import { autoUpdater } from 'electron-updater';
+//import { autoUpdater } from 'electron-updater';
+//import packageJsonData from '../../package.json';
 import MenuBuilder from './menu';
 import { exitTheApp, isDev } from './lib/utils';
 import { openDevToolsByDefault, useCustomWindowXY } from './dxConfig';
@@ -36,8 +38,8 @@ import { devPlayground } from './playground';
 import { logMetadata } from './ipcListeners/log';
 import { customEvent } from './lib/customEvent';
 import { getTranslate } from '../localization';
-import packageJsonData from '../../package.json';
 import { defaultSettings } from '../defaultSettings';
+import NetworkMonitor from './networkMonitor';
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -55,8 +57,8 @@ export const binAssetsPath = path.join(
 );
 export const regeditVbsDirPath = path.join(binAssetsPath, 'vbs');
 
-autoUpdater.autoDownload = false;
-autoUpdater.autoRunAppAfterInstall = true;
+// autoUpdater.autoDownload = false;
+// autoUpdater.autoRunAppAfterInstall = true;
 
 if (!gotTheLock) {
     log.info('did not create new instance since there was already one running.');
@@ -160,6 +162,7 @@ if (!gotTheLock) {
             frame: true,
             resizable: false,
             fullscreenable: false,
+            //minimizable: process.platform !== 'linux',
             icon: getAssetPath('oblivion.png'),
             webPreferences: {
                 nativeWindowOpen: false,
@@ -185,12 +188,28 @@ if (!gotTheLock) {
             config.webPreferences.devToolsKeyCombination = true;
         }
 
-        const startAtLogin = async () => {
+        /*const startAtLogin = async () => {
             if (process.env.NODE_ENV !== 'development') {
                 const checkOpenAtLogin = await settings.get('openAtLogin');
                 app.setLoginItemSettings({
                     openAtLogin: typeof checkOpenAtLogin === 'boolean' ? checkOpenAtLogin : false
                 });
+            }
+        };*/
+
+        const checkStartUp = async () => {
+            if (process.env.NODE_ENV !== 'development') {
+                const checkOpenAtLogin = await settings.get('openAtLogin');
+                const loginItemSettings = app.getLoginItemSettings();
+                if (
+                    typeof checkOpenAtLogin === 'boolean' &&
+                    checkOpenAtLogin &&
+                    !loginItemSettings.openAtLogin
+                ) {
+                    app.setLoginItemSettings({
+                        openAtLogin: true
+                    });
+                }
             }
         };
 
@@ -226,7 +245,12 @@ if (!gotTheLock) {
                         );
                         await exitTheApp(mainWindow);
                     } else {
-                        mainWindow?.hide();
+                        const forceClose = await settings.get('forceClose');
+                        if (typeof forceClose === 'boolean' && forceClose) {
+                            await exitTheApp(mainWindow);
+                        } else {
+                            mainWindow?.hide();
+                        }
                     }
                 });
 
@@ -252,9 +276,24 @@ if (!gotTheLock) {
 
                 // Fixing the Issue of Applications Closing on a macOS
                 app.on('before-quit', () => {
-                    startAtLogin();
+                    //startAtLogin();
                     connectionStatus = 'disconnected';
                     mainWindow?.removeAllListeners('close');
+                    //await exitTheApp(mainWindow);
+                });
+
+                powerMonitor.on('shutdown', async (event: any) => {
+                    event.preventDefault();
+                    const shutdownTimeout = setTimeout(() => {
+                        app?.quit();
+                    }, 2500);
+                    try {
+                        await exitTheApp(mainWindow);
+                        clearTimeout(shutdownTimeout);
+                        app?.quit();
+                    } catch (error) {
+                        app?.quit();
+                    }
                 });
             } else {
                 mainWindow.show();
@@ -399,6 +438,13 @@ if (!gotTheLock) {
                     ]
                 },
                 { label: '', type: 'separator' },
+                /*{
+                    label: appLang.systemTray.speed_test,
+                    type: 'normal',
+                    click: () => {
+                        redirectTo('/speed');
+                    }
+                },*/
                 {
                     label: appLang.systemTray.about,
                     type: 'normal',
@@ -450,6 +496,9 @@ if (!gotTheLock) {
             );
         };
 
+        const networkMonitor = new NetworkMonitor(mainWindow);
+        networkMonitor.initializeIpcEvents();
+
         app?.whenReady().then(() => {
             if (typeof getUserLang === 'undefined') {
                 getUserLang = defaultSettings.lang;
@@ -469,6 +518,15 @@ if (!gotTheLock) {
                     )
                 );
                 appIcon.focus();
+            });
+
+            checkStartUp();
+            ipcMain.on('startup', async (event, newStatus) => {
+                if (process.env.NODE_ENV !== 'development') {
+                    app.setLoginItemSettings({
+                        openAtLogin: newStatus
+                    });
+                }
             });
 
             connectionStatus = 'disconnected';
@@ -495,17 +553,17 @@ if (!gotTheLock) {
                 );
             });
 
-            const autoUpdateFeed = `https://update.electronjs.org/${packageJsonData.build.publish.owner}/${packageJsonData.build.publish.repo}/${process.platform}-${process.arch}/${app.getVersion()}`;
+            /*const autoUpdateFeed = `https://update.electronjs.org/${packageJsonData.build.publish.owner}/${packageJsonData.build.publish.repo}/${process.platform}-${process.arch}/${app.getVersion()}`;
             autoUpdater.setFeedURL(autoUpdateFeed);
-            /*autoUpdater.setFeedURL({
+            autoUpdater.setFeedURL({
                 provider: 'github',
                 owner: `${packageJsonData.build.publish.owner}`,
                 repo: `${packageJsonData.build.publish.repo}`
-            });*/
-            autoUpdater.checkForUpdatesAndNotify();
+            });
+            autoUpdater.checkForUpdatesAndNotify();*/
         });
 
-        autoUpdater.on('update-available', () => {
+        /*autoUpdater.on('update-available', () => {
             dialog
                 .showMessageBox({
                     type: 'info',
@@ -558,16 +616,16 @@ if (!gotTheLock) {
             if (mainWindow) {
                 mainWindow.setProgressBar(0);
             }
-        });
+        });*/
 
-        process.on('uncaughtException', (error: any) => {
+        /*process.on('uncaughtException', (error: any) => {
             console.error('Unhandled Exception:', error);
             const errorMessage = `A JavaScript error occurred in the main process.
         Error message: ${error.message}
         Stack trace: ${error.stack}`;
             dialog.showErrorBox('Error', errorMessage);
             app.quit();
-        });
+        });*/
 
         log.info('od is ready!');
     };

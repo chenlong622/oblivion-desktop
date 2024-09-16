@@ -1,5 +1,5 @@
 import toast from 'react-hot-toast';
-import { getTranslate } from '../../localization';
+import { Language } from '../../localization/type';
 
 const defaultToastStyle = {
     fontSize: '13px',
@@ -28,19 +28,17 @@ export const defaultToastWithSubmitButton = (
 ) => {
     toast(
         (currentToast) => (
-            <>
-                <div className='customToast'>
-                    <p>{msg}</p>
-                    <button
-                        onClick={() => {
-                            toast.remove(currentToast?.id);
-                            onSubmitCallBack();
-                        }}
-                    >
-                        {submitTitle}
-                    </button>
-                </div>
-            </>
+            <div className='customToast'>
+                <p>{msg}</p>
+                <button
+                    onClick={() => {
+                        toast.remove(currentToast?.id);
+                        onSubmitCallBack();
+                    }}
+                >
+                    {submitTitle}
+                </button>
+            </div>
         ),
         {
             id: id,
@@ -62,7 +60,7 @@ export const settingsHaveChangedToast = ({
 }: {
     isConnected: boolean;
     isLoading: boolean;
-    appLang: any;
+    appLang: Language;
 }) => {
     if (doNotShowSettingsHaveChangedToastInCurrentSession) return;
     if (isConnected || isLoading) {
@@ -78,11 +76,16 @@ export const settingsHaveChangedToast = ({
     }
 };
 
-/*const appLang = getTranslate('en');
-export const loadingToast = () => {
-    toast.loading(appLang?.toast?.please_wait, {
+export const loadingToast = (msg: string) => {
+    toast.loading(msg, {
         id: 'LOADING',
         duration: Infinity,
         style: defaultToastStyle
     });
-};*/
+};
+
+export const stopLoadingToast = () => {
+    setTimeout(() => {
+        toast.remove('LOADING');
+    }, 1000);
+};

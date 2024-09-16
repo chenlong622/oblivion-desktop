@@ -1,6 +1,5 @@
 .erb
 .vscode
-assets
 node_modules
 .git
 
@@ -26,6 +25,7 @@ node_modules
 
 release/app/dist
 release/build
+.github/release_message.md
 .erb/dll
 
 .idea
@@ -41,3 +41,6 @@ npm-debug.log.*
 bin
 README.md
 stuff
+
+assets/*
+!assets/css

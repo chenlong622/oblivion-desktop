@@ -18,10 +18,11 @@ const useOptions = () => {
 
     const [theme, setTheme] = useState<undefined | string>();
     const [lang, setLang] = useState<string>('');
-    const [systemTray, setSystemTray] = useState<undefined | boolean>();
     const [openAtLogin, setOpenAtLogin] = useState<undefined | boolean>();
     const [autoConnect, setAutoConnect] = useState<undefined | boolean>();
+    const [forceClose, setForceClose] = useState<undefined | boolean>();
     const [showRestoreModal, setShowRestoreModal] = useState<boolean>(false);
+    const [shortcut, setShortcut] = useState<boolean>(false);
     const appLang = useTranslate();
 
     const { state } = useLocation();
@@ -52,14 +53,17 @@ const useOptions = () => {
         settings.get('lang').then((value) => {
             setLang(typeof value === 'undefined' ? getLanguageName() : value);
         });
-        settings.get('systemTray').then((value) => {
-            setSystemTray(typeof value === 'undefined' ? defaultSettings.systemTray : value);
-        });
         settings.get('openAtLogin').then((value) => {
             setOpenAtLogin(typeof value === 'undefined' ? defaultSettings.openAtLogin : value);
         });
         settings.get('autoConnect').then((value) => {
             setAutoConnect(typeof value === 'undefined' ? defaultSettings.autoConnect : value);
+        });
+        settings.get('forceClose').then((value) => {
+            setForceClose(typeof value === 'undefined' ? defaultSettings.forceClose : value);
+        });
+        settings.get('shortcut').then((value) => {
+            setShortcut(typeof value === 'undefined' ? defaultSettings.shortcut : value);
         });
 
         ipcRenderer.on('tray-menu', (args: any) => {
@@ -104,12 +108,8 @@ const useOptions = () => {
     const onClickAutoStartButton = useCallback(() => {
         setOpenAtLogin(!openAtLogin);
         settings.set('openAtLogin', !openAtLogin);
+        ipcRenderer.sendMessage('startup', !openAtLogin);
     }, [openAtLogin]);
-
-    const onClickAutoConnectButton = useCallback(() => {
-        setAutoConnect(!autoConnect);
-        settings.set('autoConnect', !autoConnect);
-    }, [autoConnect]);
 
     const onKeyDownAutoStartButton = useCallback(
         (e: KeyboardEvent<HTMLDivElement>) => {
@@ -121,6 +121,11 @@ const useOptions = () => {
         [onClickAutoStartButton]
     );
 
+    const onClickAutoConnectButton = useCallback(() => {
+        setAutoConnect(!autoConnect);
+        settings.set('autoConnect', !autoConnect);
+    }, [autoConnect]);
+
     const onKeyDownAutoConnectButton = useCallback(
         (e: KeyboardEvent<HTMLDivElement>) => {
             if (e.key === 'Enter') {
@@ -131,19 +136,34 @@ const useOptions = () => {
         [onClickAutoConnectButton]
     );
 
-    const onClickSystemTrayButton = useCallback(() => {
-        setSystemTray(!systemTray);
-        settings.set('systemTray', !systemTray);
-    }, [systemTray]);
+    const onClickForceCloseButton = useCallback(() => {
+        setForceClose(!forceClose);
+        settings.set('forceClose', !forceClose);
+    }, [forceClose]);
 
-    const onKeyDownSystemTrayButton = useCallback(
+    const onKeyDownForceCloseButton = useCallback(
         (e: KeyboardEvent<HTMLDivElement>) => {
             if (e.key === 'Enter') {
                 e.preventDefault();
-                onClickSystemTrayButton();
+                onClickForceCloseButton();
             }
         },
-        [onClickSystemTrayButton]
+        [onClickForceCloseButton]
+    );
+
+    const onClickShortcutButton = useCallback(() => {
+        setShortcut(!shortcut);
+        settings.set('shortcut', !shortcut);
+    }, [shortcut]);
+
+    const onKeyDownShortcutButton = useCallback(
+        (e: KeyboardEvent<HTMLDivElement>) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                onClickShortcutButton();
+            }
+        },
+        [onClickShortcutButton]
     );
 
     const onClickRestore = useCallback(() => setShowRestoreModal(true), []);
@@ -161,9 +181,10 @@ const useOptions = () => {
     return {
         theme,
         lang,
-        //systemTray,
         openAtLogin,
         autoConnect,
+        forceClose,
+        shortcut,
         showRestoreModal,
         appLang,
         langRef,
@@ -175,15 +196,18 @@ const useOptions = () => {
         onClickAutoConnectButton,
         onKeyDownAutoStartButton,
         onKeyDownAutoConnectButton,
-        //onClickSystemTrayButton,
-        //onKeyDownSystemTrayButton,
+        onClickForceCloseButton,
+        onKeyDownForceCloseButton,
+        onClickShortcutButton,
+        onKeyDownShortcutButton,
         onClickRestore,
         onKeyDownRestore,
         setTheme,
-        //setSystemTray,
         setLang,
         setOpenAtLogin,
-        setAutoConnect
+        setAutoConnect,
+        setForceClose,
+        setShortcut
     };
 };
 

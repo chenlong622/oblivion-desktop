@@ -9,7 +9,7 @@
             <img src='assets/img/flags/gb.svg' alt='English' style='width: 20px;height: 15px;border-radius: 3px;' />
         </a>
         | 
-       <img src='assets/img/flags/ir.svg' alt='Persian' style='width: 20px;height: 15px;border-radius: 3px;' />
+       <img src='assets/img/flags/iran.svg' alt='Persian' style='width: 20px;height: 15px;border-radius: 3px;' />
         <small>فارسی</small>
     </p>
 </div>
@@ -99,7 +99,9 @@ Cloudflare Warp فراهم می‌کند.
                 :white_check_mark:  انگلیسی<br>
                 :white_check_mark:  چینی<br>
                 :white_check_mark:  روسی<br>
-                :white_check_mark:  آلمانی
+                :white_check_mark:  آلمانی<br>
+                :white_check_mark:  ترکی<br>
+                :white_check_mark:  اندونزیایی
             </td>
         </tr>
         <tr>

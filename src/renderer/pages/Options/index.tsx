@@ -1,9 +1,7 @@
 import classNames from 'classnames';
-import Lottie from 'lottie-react';
 import { Toaster } from 'react-hot-toast';
 import Nav from '../../components/Nav';
 import { languages } from '../../../defaultSettings';
-import LottieFile from '../../../../assets/json/1713988096625.json';
 import RestoreModal from '../../components/Modal/Restore';
 import Tabs from '../../components/Tabs';
 import useOptions from './useOptions';
@@ -19,69 +17,64 @@ export default function Options() {
         onClickAutoConnectButton,
         onClickChangeTheme,
         onClickRestore,
-        // onClickSystemTrayButton,
         onCloseRestoreModal,
         onKeyDownAutoStartButton,
         onKeyDownAutoConnectButton,
+        onClickForceCloseButton,
+        onKeyDownForceCloseButton,
+        onClickShortcutButton,
+        onKeyDownShortcutButton,
         onKeyDownChangeTheme,
         onKeyDownRestore,
-        // onKeyDownSystemTrayButton,
         openAtLogin,
         autoConnect,
+        forceClose,
+        shortcut,
         showRestoreModal,
         setTheme,
-        //setSystemTray,
         setLang,
         setOpenAtLogin,
         setAutoConnect,
-        //systemTray,
+        setForceClose,
+        setShortcut,
         theme
     } = useOptions();
 
     if (
         typeof theme === 'undefined' ||
         typeof lang === 'undefined' ||
-        //typeof systemTray === 'undefined' ||
         typeof openAtLogin === 'undefined' ||
+        typeof forceClose === 'undefined' ||
+        typeof shortcut === 'undefined' ||
         typeof autoConnect === 'undefined'
     )
-        return (
-            <div className='settings'>
-                <div className='lottie'>
-                    <Lottie animationData={LottieFile} loop={true} />
-                </div>
-            </div>
-        );
+        return <div className='settings' />;
 
     return (
         <>
             <Nav title={appLang?.settings?.option} />
             <RestoreModal
-                {...{
-                    setTheme,
-                    //setSystemTray,
-                    setLang,
-                    setOpenAtLogin,
-                    setAutoConnect
-                }}
+                setTheme={setTheme}
+                setForceClose={setForceClose}
+                setLang={setLang}
+                setOpenAtLogin={setOpenAtLogin}
+                setAutoConnect={setAutoConnect}
+                setShortcut={setShortcut}
                 title={appLang?.modal?.restore_title}
                 isOpen={showRestoreModal}
                 onClose={onCloseRestoreModal}
             />
-            <div className={classNames('myApp', 'normalPage')}>
+            <div className={classNames('myApp', 'normalPage', 'withScroll')}>
                 <Tabs active='options' />
                 <div className='settings' role='menu'>
                     <div
-                        role='presentation'
+                        role='button'
                         className='item'
                         onClick={onClickChangeTheme}
                         onKeyDown={onKeyDownChangeTheme}
+                        tabIndex={0}
                     >
-                        <label
-                            className='key'
-                            htmlFor='flexSwitchCheckChecked'
-                            // role='label'
-                        >
+                        <label className='key' htmlFor='flexSwitchCheckChecked'>
                             {appLang?.settings?.dark_mode}
                         </label>
                         <div className='value'>
@@ -111,10 +104,38 @@ export default function Options() {
                         <div className='info'>{appLang?.settings?.lang_desc}</div>
                     </div>
                     <div
-                        role='presentation'
+                        role='button'
+                        className='item'
+                        onClick={onClickShortcutButton}
+                        onKeyDown={onKeyDownShortcutButton}
+                        tabIndex={0}
+                    >
+                        <label className='key' htmlFor='shortcut'>
+                            {appLang?.settings?.shortcut}
+                        </label>
+                        <div className='value'>
+                            <div
+                                tabIndex={-1}
+                                id='shortcut'
+                                className={classNames('checkbox', shortcut ? 'checked' : '')}
+                            >
+                                <i className='material-icons'>&#xe876;</i>
+                            </div>
+                        </div>
+                        <div className='info'>{appLang?.settings?.shortcut_desc}</div>
+                    </div>
+                </div>
+                <div className='moreSettings'>
+                    <i className='material-icons'>&#xe313;</i>
+                    {appLang?.settings?.more}
+                </div>
+                <div className='settings' role='menu'>
+                    <div
+                        role='button'
                         className='item'
                         onClick={onClickAutoStartButton}
                         onKeyDown={onKeyDownAutoStartButton}
+                        tabIndex={0}
                     >
                         <label
                             className='key'
@@ -135,16 +156,13 @@ export default function Options() {
                         <div className='info'>{appLang?.settings?.open_login_desc}</div>
                     </div>
                     <div
-                        role='presentation'
+                        role='button'
                         className='item'
                         onClick={onClickAutoConnectButton}
                         onKeyDown={onKeyDownAutoConnectButton}
+                        tabIndex={0}
                     >
-                        <label
-                            className='key'
-                            htmlFor='auto-connect'
-                            // role='label'
-                        >
+                        <label className='key' htmlFor='auto-connect'>
                             {appLang?.settings?.auto_connect}
                         </label>
                         <div className='value'>
@@ -158,41 +176,39 @@ export default function Options() {
                         </div>
                         <div className='info'>{appLang?.settings?.auto_connect_desc}</div>
                     </div>
-                    {/*<div
-                        role='presentation'
+                    <div
+                        role='button'
                         className='item'
-                        onClick={onClickSystemTrayButton}
-                        onKeyDown={onKeyDownSystemTrayButton}
+                        onClick={onClickForceCloseButton}
+                        onKeyDown={onKeyDownForceCloseButton}
+                        tabIndex={0}
                     >
-                        <label
-                            className='key'
-                            htmlFor='system-tray'
-                            // role='label'
-                        >
-                            {appLang?.settings?.system_tray}
+                        <label className='key' htmlFor='force-close'>
+                            {appLang?.settings?.force_close}
                         </label>
                         <div className='value'>
                             <div
                                 tabIndex={-1}
-                                id='system-tray'
-                                className={classNames('checkbox', systemTray ? 'checked' : '')}
+                                id='force-close'
+                                className={classNames('checkbox', forceClose ? 'checked' : '')}
                             >
                                 <i className='material-icons'>&#xe876;</i>
                             </div>
                         </div>
-                        <div className='info'>{appLang?.settings?.system_tray_desc}</div>
-                    </div>*/}
-                </div>
+                        <div className='info'>{appLang?.settings?.force_close_desc}</div>
+                    </div>
+                    {/* </div>
                 <div className='moreSettings'>
                     <i className='material-icons'>&#xe313;</i>
                     {appLang?.settings?.more}
                 </div>
-                <div className='settings' role='menu'>
+                <div className='settings' role='menu'> */}
                     <div
-                        role='presentation'
+                        role='button'
                         className={'item'}
                         onClick={onClickRestore}
                         onKeyDown={onKeyDownRestore}
+                        tabIndex={0}
                     >
                         <label
                             className='key'

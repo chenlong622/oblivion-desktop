@@ -3,14 +3,15 @@ import { Link } from 'react-router-dom';
 
 import Drawer from 'react-modern-drawer';
 import appIco from '../../../../assets/oblivion.png';
-import packageJsonData from '../../../../package.json';
+import { Language } from '../../../localization/type';
 
 interface LandingDrawerProps {
-    appLang: any;
+    appLang: Language;
     drawerIsOpen: boolean;
     lang?: string;
     hasNewUpdate: boolean;
     toggleDrawer: () => void;
+    appVersion: string;
 }
 
 const LandingDrawer: FC<LandingDrawerProps> = ({
@@ -18,7 +19,8 @@ const LandingDrawer: FC<LandingDrawerProps> = ({
     drawerIsOpen,
     hasNewUpdate,
     lang,
-    toggleDrawer
+    toggleDrawer,
+    appVersion
 }) => {
     return (
         <Drawer
@@ -72,20 +74,14 @@ const LandingDrawer: FC<LandingDrawerProps> = ({
                         </Link>
                     </li>
                     <li className='divider' />
-                    {/*<li>
-                <Link to='/speed'>
-                    <i className={'material-icons'}>&#xe9e4;</i>
-                    <span>{appLang?.home?.drawer_speed_test}</span>
-                </Link>
-            </li>*/}
                     <li className={hasNewUpdate ? '' : 'hidden'} role='presentation'>
                         <a
-                            href='https://github.com/bepass-org/oblivion-desktop/releases/latest'
+                            href='https://github.com/bepass-org/oblivion-desktop/releases/latest#download'
                             target='_blank'
                             rel='noreferrer'
                             role='menuitem'
                         >
-                            <i className={'material-icons'}>&#xe923;</i>
+                            <i className='material-icons'>&#xe923;</i>
                             <span>{appLang?.home?.drawer_update}</span>
                             <div className='label label-warning label-xs'>
                                 {appLang?.home?.drawer_update_label}
@@ -93,15 +89,21 @@ const LandingDrawer: FC<LandingDrawerProps> = ({
                         </a>
                     </li>
                     {/*<li>
-                <a
-                    onClick={() => {
-                        navigate('/options', { state: { targetId: 'languages' } });
-                    }}
-                >
-                    <i className='material-icons'>&#xe8e2;</i>
-                    <span>{appLang?.home?.drawer_lang}</span>
-                </a>
-            </li>*/}
+                        <a
+                            onClick={() => {
+                                navigate('/options', { state: { targetId: 'languages' } });
+                            }}
+                        >
+                            <i className='material-icons'>&#xe8e2;</i>
+                            <span>{appLang?.home?.drawer_lang}</span>
+                        </a>
+                    </li>*/}
+                    {/* <li role='presentation'>
+                        <Link to='/speed' role='menuitem'>
+                            <i className={'material-icons'}>speed</i>
+                            <span>{appLang?.speedTest?.title}</span>
+                        </Link>
+                    </li> */}
                     <li role='presentation'>
                         <Link to='/about' role='menuitem'>
                             <i className={'material-icons'}>&#xe88e;</i>
@@ -116,7 +118,7 @@ const LandingDrawer: FC<LandingDrawerProps> = ({
                     </li>
                 </ul>
                 <div className='appVersion' role='note'>
-                    v<b>{packageJsonData.version}</b>
+                    v<b>{appVersion}</b>
                 </div>
             </div>
         </Drawer>

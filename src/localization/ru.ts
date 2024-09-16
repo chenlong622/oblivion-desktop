@@ -59,10 +59,13 @@ const russian: Language = {
         port_desc: 'Установите порт прокси для приложения',
         share_vpn: 'Поделиться (LAN)',
         share_vpn_desc: 'Поделиться прокси в сети',
-        dns: 'Изменить DNS',
-        dns_desc: 'Использовать общедоступный DNS Google',
+        dns: 'DNS',
+        dns_desc: 'Блокировать рекламу и контент для взрослых',
+        dns_error: 'Это применимо к методам Warp и Gool',
         ip_data: 'Проверка IP',
         ip_data_desc: 'Отображение IP-адреса и местоположения после подключения',
+        data_usage: 'Использование данных',
+        data_usage_desc: 'Отображение использования данных и скорости в реальном времени',
         dark_mode: 'Темный режим',
         dark_mode_desc: 'Укажите режим отображения приложения',
         lang: 'Язык',
@@ -73,6 +76,10 @@ const russian: Language = {
         auto_connect_desc: 'Подключаться при открытии приложения',
         system_tray: 'Системный трей',
         system_tray_desc: 'Не размещать значок программы на панели задач',
+        force_close: 'Принудительное закрытие',
+        force_close_desc: 'Не оставаться в системном трее после выхода',
+        shortcut: 'Навигатор',
+        shortcut_desc: 'Ярлыки на главной странице',
         restore: 'Восстановить',
         restore_desc: 'Применить настройки приложения по умолчанию',
         scanner: 'Настройки сканера',
@@ -89,7 +96,9 @@ const russian: Language = {
         routing_rules: 'Черный список',
         routing_rules_desc: 'Предотвращать прохождение трафика через искажение',
         routing_rules_disabled: 'Отключено',
-        routing_rules_items: 'Предметы'
+        routing_rules_items: 'Предметы',
+        profile: 'Профиль',
+        profile_desc: 'Сохраненные вами конечные точки'
     },
     tabs: {
         home: 'Связь',
@@ -111,6 +120,13 @@ const russian: Language = {
         routing_rules_sample: 'Пример',
         endpoint_default: 'По умолчанию',
         endpoint_suggested: 'предложено',
+        endpoint_latest: 'Последний',
+        endpoint_update: 'Получить предложенные конечные точки',
+        endpoint_paste: 'вставить активный endpoint',
+        profile_title: 'Профиль',
+        profile_name: 'Название',
+        profile_endpoint: 'Конечная точка',
+        profile_limitation: (value) => `Вы можете добавить максимум ${value} конечных точек.`,
         confirm: 'Подтверждаю',
         update: 'Обновить',
         cancel: 'Отмена'
@@ -136,7 +152,10 @@ const russian: Language = {
         error_configuration_not_supported:
             'Конфигурация прокси-сервера не поддерживается в вашей операционной системе, но вы можете использовать Warp Proxy вручную.',
         error_configuring_proxy: (value) => `Ошибка настройки прокси-сервера для ${value}!`,
-        error_wp_not_found: 'Файл warp-plus не находится рядом с пакетом приложения.'
+        error_wp_not_found: 'Файл warp-plus не находится рядом с пакетом приложения.',
+        error_wp_stopped: 'Файл warp-plus столкнулся с проблемой при запуске!',
+        error_connection_failed: 'Подключение к 1.1.1.1 невозможно.',
+        error_country_failed: 'Невозможно подключиться к выбранной стране.'
     },
     about: {
         title: 'О приложении',
@@ -155,6 +174,7 @@ const russian: Language = {
         settings_app: 'Приложение',
         about: 'О программе',
         log: 'Журнал',
+        speed_test: 'Тест скорости',
         exit: 'Выход'
     },
     update: {
@@ -163,6 +183,17 @@ const russian: Language = {
         ready: 'Обновление готово',
         ready_message: (value) =>
             `Новая версия ${value} готова. Она будет установлена после перезагрузки. Хотите перезагрузить сейчас?`
+    },
+    speedTest: {
+        title: 'Тест скорости',
+        initializing: 'Инициализация теста скорости ...',
+        click_start: 'Нажмите кнопку, чтобы начать тест скорости',
+        error_msg: 'Произошла ошибка во время теста скорости. Пожалуйста, попробуйте снова.',
+        server_unavailable: 'Сервер проверки скорости недоступен',
+        download_speed: 'Скорость загрузки',
+        upload_speed: 'Скорость выгрузки',
+        latency: 'Задержка',
+        jitter: 'Джиттер'
     }
 };
 export default russian;

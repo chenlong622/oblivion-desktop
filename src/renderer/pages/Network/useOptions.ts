@@ -1,11 +1,11 @@
-import { ChangeEvent, KeyboardEvent, useCallback, useEffect, useState } from 'react';
+import { ChangeEvent, KeyboardEvent, useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useGoBackOnEscape from '../../hooks/useGoBackOnEscape';
 import { useStore } from '../../store';
 import { settings } from '../../lib/settings';
 import { toPersianNumber } from '../../lib/toPersianNumber';
 import { settingsHaveChangedToast } from '../../lib/toasts';
-import { defaultSettings } from '../../../defaultSettings';
+import { defaultSettings, dnsServers } from '../../../defaultSettings';
 import { ipcRenderer } from '../../lib/utils';
 import useTranslate from '../../../localization/useTranslate';
 
@@ -23,11 +23,31 @@ const useOptions = () => {
     const [showPortModal, setShowPortModal] = useState<boolean>(false);
     const appLang = useTranslate();
     const [ipData, setIpData] = useState<undefined | boolean>();
-    const [dns, setDns] = useState<undefined | boolean>();
+    const [dns, setDns] = useState<undefined | string>();
     const [routingRules, setRoutingRules] = useState<string>();
     const [showRoutingRulesModal, setShowRoutingRulesModal] = useState<boolean>(false);
-
+    const [method, setMethod] = useState<undefined | string>('');
+    const [dataUsage, setDataUsage] = useState<boolean>();
+    const [localIp, setLocalIp] = useState('0.0.0.0');
     const navigate = useNavigate();
+
+    const getLocalIP = async () => {
+        const ipRegex = /([0-9]{1,3}\.){3}[0-9]{1,3}/;
+        const pc = new RTCPeerConnection({
+            iceServers: []
+        });
+        pc.createDataChannel('');
+        pc.createOffer().then((offer) => pc.setLocalDescription(offer));
+        pc.onicecandidate = (ice) => {
+            if (ice && ice.candidate && ice.candidate.candidate) {
+                const ipMatch = ipRegex.exec(ice.candidate.candidate);
+                if (ipMatch) {
+                    setLocalIp(ipMatch[0]);
+                    pc.onicecandidate = null;
+                }
+            }
+        };
+    };
 
     useEffect(() => {
         settings.get('ipData').then((value) => {
@@ -46,7 +66,7 @@ const useOptions = () => {
             setShareVPN(typeof value === 'undefined' ? defaultSettings.shareVPN : value);
         });
         settings.get('dns').then((value) => {
-            setDns(typeof value === 'undefined' ? defaultSettings.dns : value);
+            setDns(typeof value === 'undefined' ? dnsServers[0].value : value);
         });
         settings.get('routingRules').then((value) => {
             setRoutingRules(typeof value === 'undefined' ? defaultSettings.routingRules : value);
@@ -54,12 +74,20 @@ const useOptions = () => {
         settings.get('lang').then((value) => {
             setLang(typeof value === 'undefined' ? defaultSettings.lang : value);
         });
+        settings.get('method').then((value) => {
+            setMethod(typeof value === 'undefined' ? defaultSettings.method : value);
+        });
+        settings.get('dataUsage').then((value) => {
+            setDataUsage(typeof value === 'undefined' ? defaultSettings.dataUsage : value);
+        });
 
         ipcRenderer.on('tray-menu', (args: any) => {
             if (args.key === 'changePage') {
                 navigate(args.msg);
             }
         });
+
+        getLocalIP();
     }, []);
 
     const countRoutingRules = useCallback(
@@ -79,13 +107,11 @@ const useOptions = () => {
 
     const onClosePortModal = useCallback(() => {
         setShowPortModal(false);
-        settingsHaveChangedToast({ ...{ isConnected, isLoading, appLang } });
-    }, [isConnected, isLoading, appLang]);
+    }, []);
 
     const onCloseRoutingRulesModal = useCallback(() => {
         setShowRoutingRulesModal(false);
-        settingsHaveChangedToast({ ...{ isConnected, isLoading, appLang } });
-    }, [isConnected, isLoading, appLang]);
+    }, []);
 
     const onChangeProxyMode = useCallback(
         (event: ChangeEvent<HTMLSelectElement>) => {
@@ -96,8 +122,19 @@ const useOptions = () => {
                 if (event.target.value === 'none') {
                     setIpData(false);
                     settings.set('ipData', false);
+                    setDataUsage(false);
+                    settings.set('dataUsage', false);
                 }
             }, 1000);
+        },
+        [isConnected, isLoading, appLang]
+    );
+
+    const onChangeDNS = useCallback(
+        (event: ChangeEvent<HTMLSelectElement>) => {
+            setDns(event.target.value);
+            settings.set('dns', event.target.value);
+            settingsHaveChangedToast({ ...{ isConnected, isLoading, appLang } });
         },
         [isConnected, isLoading, appLang]
     );
@@ -134,9 +171,9 @@ const useOptions = () => {
         settings.set('shareVPN', !shareVPN);
         settingsHaveChangedToast({ ...{ isConnected, isLoading, appLang } });
         setTimeout(function () {
-            settings.set('hostIP', !shareVPN ? '0.0.0.0' : '127.0.0.1');
+            settings.set('hostIP', !shareVPN ? localIp : '127.0.0.1');
         }, 1000);
-    }, [isConnected, isLoading, shareVPN, appLang]);
+    }, [isConnected, isLoading, shareVPN, appLang, localIp]);
 
     const handleShareVPNOnKeyDown = useCallback(
         (e: KeyboardEvent<HTMLDivElement>) => {
@@ -153,6 +190,13 @@ const useOptions = () => {
             setIpData(!ipData);
             settings.set('ipData', !ipData);
         }
+        setTimeout(function () {
+            if (ipData) {
+                setDataUsage(false);
+                settings.set('dataUsage', false);
+                ipcRenderer.sendMessage('check-speed', false);
+            }
+        }, 1000);
     }, [ipData, proxyMode]);
 
     const handleCheckIpDataOnKeyDown = useCallback(
@@ -165,6 +209,26 @@ const useOptions = () => {
         [handleCheckIpDataOnClick]
     );
 
+    const handleDataUsageOnClick = useCallback(() => {
+        if (ipData) {
+            setDataUsage(!dataUsage);
+            settings.set('dataUsage', !dataUsage);
+        }
+        ipcRenderer.sendMessage('check-speed', isConnected && !dataUsage && ipData);
+    }, [dataUsage, ipData, isConnected]);
+
+    const handleDataUsageOnKeyDown = useCallback(
+        (e: KeyboardEvent<HTMLDivElement>) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleDataUsageOnClick();
+            }
+        },
+        [handleDataUsageOnClick]
+    );
+
+    const methodIsPsiphon = useMemo(() => method === 'psiphon', [method]);
+
     return {
         proxyMode,
         shareVPN,
@@ -175,12 +239,15 @@ const useOptions = () => {
         routingRules,
         showRoutingRulesModal,
         appLang,
+        dataUsage,
+        methodIsPsiphon,
         setPort,
         setRoutingRules,
         countRoutingRules,
         onClosePortModal,
         onCloseRoutingRulesModal,
         onChangeProxyMode,
+        onChangeDNS,
         onClickPort,
         onKeyDownClickPort,
         onClickRoutingRoles,
@@ -188,7 +255,9 @@ const useOptions = () => {
         handleShareVPNOnClick,
         handleShareVPNOnKeyDown,
         handleCheckIpDataOnClick,
-        handleCheckIpDataOnKeyDown
+        handleCheckIpDataOnKeyDown,
+        handleDataUsageOnClick,
+        handleDataUsageOnKeyDown
     };
 };
 export default useOptions;

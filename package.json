@@ -11,7 +11,7 @@
         "url": "https://github.com/bepass-org/oblivion-desktop/issues",
         "email": "ircfspace@gmail.com"
     },
-    "version": "0.28.0-beta",
+    "version": "1.9.0",
     "license": "Restrictive",
     "main": "./src/main/main.ts",
     "scripts": {
@@ -89,7 +89,8 @@
         }
     },
     "dependencies": {
-        "axios": "^1.6.8",
+        "@cloudflare/speedtest": "^1.3.0",
+        "axios": "^1.7.4",
         "classnames": "^2.5.1",
         "decompress": "^4.2.1",
         "electron": "^26.2.1",
@@ -97,7 +98,6 @@
         "electron-log": "^4.4.8",
         "electron-settings": "^4.0.3",
         "electron-updater": "^6.2.1",
-        "lottie-react": "^2.4.0",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "react-hot-toast": "^2.4.1",
@@ -106,6 +106,7 @@
         "react-swipe-component": "^3.0.0",
         "regedit": "^5.1.3",
         "serve-handler": "^6.1.5",
+        "systeminformation": "^5.23.4",
         "tree-kill": "^1.2.2",
         "zustand": "^4.5.2"
     },
@@ -182,7 +183,8 @@
         "webpack-merge": "^5.9.0"
     },
     "build": {
-        "productName": "Oblivion Desktop",
+        "productName": "oblivion-desktop",
+        "executableName": "oblivion-desktop",
         "appId": "org.desktop.oblivion",
         "artifactName": "oblivion-desktop-${os}-${arch}.${ext}",
         "asar": true,
@@ -240,7 +242,11 @@
         "nsis": {
             "oneClick": false,
             "allowToChangeInstallationDirectory": true,
-            "differentialPackage": false
+            "differentialPackage": false,
+            "createDesktopShortcut": true,
+            "createStartMenuShortcut": true,
+            "runAfterFinish": true,
+            "shortcutName": "Oblivion Desktop"
         },
         "linux": {
             "target": [
