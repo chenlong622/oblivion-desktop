@@ -9,7 +9,9 @@ const brazilianPortuguese: Language = {
         disconnecting: 'Desconectando ...',
         disconnected: 'Desconectado',
         ip_check: 'Verificando IP ...',
-        keep_trying: 'Por favor, espere um momento para tentar novamente...'
+        keep_trying: 'Por favor, espere um momento para tentar novamente...',
+        preparing_rulesets: 'Preparando conjuntos de regras...',
+        downloading_rulesets_failed: 'Falha ao baixar os conjuntos de regras.'
     },
     home: {
         title_warp_based: 'Baseado em Warp',
@@ -23,7 +25,8 @@ const brazilianPortuguese: Language = {
         drawer_update_label: 'Nova Atualização',
         drawer_speed_test: 'Teste de Velocidade',
         drawer_about: 'Sobre o Aplicativo',
-        drawer_lang: 'Alterar Idioma'
+        drawer_lang: 'Alterar Idioma',
+        drawer_singbox: 'Configurações de Túnel'
     },
     toast: {
         ip_check_please_wait: 'Por favor, aguarde alguns segundos para tentar novamente!',
@@ -34,7 +37,17 @@ const brazilianPortuguese: Language = {
         cleared: 'O log foi limpo!',
         please_wait: 'Por favor, aguarde ...',
         offline: 'Você está offline!',
-        settings_changed: 'Aplicar configurações requer reconexão.'
+        settings_changed: 'Aplicar configurações requer reconexão.',
+        hardware_usage: 'Ativar esta opção aumentará o uso dos recursos de hardware.',
+        config_added:
+            'A configuração foi adicionada com sucesso, e para usá-la, você deve clicar na conexão.',
+        profile_added: 'O ponto final foi adicionado com sucesso ao perfil.',
+        endpoint_added: 'O endpoint foi substituído com sucesso.',
+        new_update:
+            'Uma nova versão do aplicativo está disponível. Você gostaria de baixá-la e prepará-la para instalação?',
+        exit_pending:
+            'A aplicação está a concluir o processo de saída; por favor, aguarde um momento antes de a iniciar novamente.',
+        help_btn: 'Ajuda'
     },
     settings: {
         title: 'Configurações do Warp',
@@ -46,7 +59,7 @@ const brazilianPortuguese: Language = {
         method_psiphon: 'Psiphon',
         method_psiphon_desc: 'Ativar Psiphon',
         method_psiphon_location: 'País',
-        method_psiphon_location_auto: 'Automático',
+        method_psiphon_location_auto: 'aleatório',
         method_psiphon_location_desc: 'Selecione o IP do país desejado',
         endpoint: 'Endpoint',
         endpoint_desc: 'Combinação de IP ou nome de domínio, junto com porta',
@@ -58,7 +71,7 @@ const brazilianPortuguese: Language = {
         proxy_mode_desc: 'Definir Configurações de Proxy',
         port: 'Porta do Proxy',
         port_desc: 'Definir a porta proxy do aplicativo',
-        share_vpn: 'Compartilhar (LAN)',
+        share_vpn: 'Endereço de ligação',
         share_vpn_desc: 'Compartilhar um proxy na rede',
         dns: 'DNS',
         dns_desc: 'Bloquear anúncios & conteúdo adulto',
@@ -75,12 +88,16 @@ const brazilianPortuguese: Language = {
         open_login_desc: 'Abrir na inicialização do sistema',
         auto_connect: 'Conexão Automática',
         auto_connect_desc: 'Conectar ao abrir o aplicativo',
+        start_minimized: 'Iniciar minimizado',
+        start_minimized_desc: 'Minimizar quando o aplicativo é aberto',
         system_tray: 'Bandeja do Sistema',
         system_tray_desc: 'Não colocar o ícone do programa na barra de tarefas',
         force_close: 'Forçar Fechamento',
         force_close_desc: 'Não permanecer na bandeja do sistema ao sair',
         shortcut: 'Atalho',
         shortcut_desc: 'Atalhos na página inicial',
+        sound_effect: 'efeito sonoro',
+        sound_effect_desc: 'reproduz um som quando a conexão é bem-sucedida',
         restore: 'Restaurar',
         restore_desc: 'Aplicar configurações padrão do aplicativo',
         scanner: 'Configurações do Scanner',
@@ -98,27 +115,64 @@ const brazilianPortuguese: Language = {
         routing_rules_disabled: 'Desativado',
         routing_rules_items: 'Itens',
         profile: 'Perfil',
-        profile_desc: 'Endpoints salvos por você'
+        profile_desc: 'Endpoints salvos por você',
+        singbox: 'Configurações de Túnel',
+        close_singbox: 'Parar operação',
+        close_singbox_desc: 'Fechar sing-box automaticamente ao desconectar',
+        close_helper: 'Parar assistente',
+        close_helper_desc: 'Fechar assistente automaticamente ao sair',
+        mtu: 'Valor MTU',
+        mtu_desc: 'Definir a Unidade Máxima de Transmissão',
+        geo_block: 'Bloqueio',
+        geo_block_desc: 'Anúncios, Malware, Phishing e Mineração de Criptomoedas',
+        geo_rules_ip: 'Roteamento IP',
+        geo_rules_ip_desc: 'Aplicação das regras GeoIP',
+        geo_rules_site: 'Roteamento Web',
+        geo_rules_site_desc: 'Aplicação das regras GeoSite',
+        geo_nsfw_block: 'Filtro de Conteúdo',
+        geo_nsfw_block_desc: 'Bloquear sites NSFW',
+        more_helper: 'Configurações do Assistente',
+        singbox_log: 'Registro',
+        singbox_log_desc: 'Definir Nível de Registro',
+        singbox_stack: 'Pilha',
+        singbox_stack_desc: 'Definir Tipo de Pilha',
+        singbox_sniff: 'Sniffing',
+        singbox_sniff_desc: 'Ativar farejamento e substituir destino',
+        singbox_addressing: 'Endereçamento',
+        singbox_addressing_desc: 'Definir Tipo de Endereço da Interface',
+        singbox_udp_block: 'Bloquear UDP',
+        singbox_udp_block_desc: 'Bloquear completamente todo o tráfego UDP',
+        more_duties: 'Mais deveres',
+        beta_release: 'Atualização Beta',
+        beta_release_desc: 'Fique informado sobre versões pré-lançamento'
     },
     tabs: {
         home: 'Conectar',
         warp: 'Warp',
         network: 'Rede',
         scanner: 'Scanner',
-        app: 'Aplicativo'
+        app: 'Aplicativo',
+        singbox: 'Túnel'
     },
     modal: {
         endpoint_title: 'Endpoint',
         license_title: 'Licença',
         license_desc:
             'O programa não precisa necessariamente de uma licença Warp para rodar, mas se você quiser, pode inserir sua licença aqui.',
-        license_clear: 'Limpar',
+        form_clear: 'Limpar',
+        test_url_title: 'URL de Teste',
+        test_url_desc: 'Endereço de teste de conectividade',
+        test_url_update: 'Receber sugestões',
         port_title: 'Porta do Proxy',
         restore_title: 'Restaurar Alterações',
         restore_desc:
             'Ao confirmar a operação de restauração, todas as configurações do programa voltarão ao estado padrão e sua conexão será desconectada.',
         routing_rules_sample: 'Exemplo',
-        endpoint_default: 'Padrão',
+        routing_rules_alert_tun:
+            'Apenas as regras de roteamento para domínio, ip e aplicativo afetarão a configuração do Tun.',
+        routing_rules_alert_system:
+            'Exceto pela regra de roteamento de aplicativo, as outras regras afetarão a configuração do Proxy do Sistema.',
+        form_default: 'Padrão',
         endpoint_suggested: 'Sugerido',
         endpoint_latest: 'Mais Recente',
         endpoint_update: 'Receber endpoints sugeridos',
@@ -127,6 +181,10 @@ const brazilianPortuguese: Language = {
         profile_name: 'Título',
         profile_endpoint: 'Endpoint',
         profile_limitation: (value) => `Você pode adicionar no máximo ${value} endpoints.`,
+        mtu_title: 'Valor MTU',
+        mtu_desc:
+            'A Unidade Máxima de Transmissão (MTU) refere-se ao tamanho máximo dos pacotes de dados, que deve ser definido entre 1000 e 9999.',
+        custom_dns_title: 'DNS personalizado',
         confirm: 'Confirmo',
         update: 'Atualizar',
         cancel: 'Cancelar'
@@ -139,12 +197,13 @@ const brazilianPortuguese: Language = {
         error_access_denied: 'Execute o programa como Administrador.',
         error_failed_set_endpoint:
             'Verifique ou substitua o valor do endpoint, ou tente novamente.',
-        error_warp_identity: 'Erro de autenticação no Cloudflare; Tente novamente.',
+        error_warp_identity: 'Erro de autenticação no Cloudflare!',
         error_script_failed: 'O programa encontrou um erro; Tente novamente.',
         error_object_null: 'O programa encontrou um erro; Tente novamente.',
         error_port_already_in_use: (value) =>
             `A porta ${value} está sendo usada por outro programa; Altere-a.`,
         error_port_socket: 'Use outra porta.',
+        error_port_restart: 'A porta está em uso; reiniciando ...',
         error_unknown_flag: 'Um comando inválido foi executado em segundo plano.',
         error_deadline_exceeded: 'Tempo limite de conexão esgotado; Tente novamente.',
         error_configuration_encountered: 'Erro na configuração do proxy!',
@@ -154,9 +213,22 @@ const brazilianPortuguese: Language = {
         error_configuring_proxy: (value) => `Erro ao configurar proxy para ${value}!`,
         error_wp_not_found:
             'O arquivo warp-plus não está localizado junto ao pacote do aplicativo!',
+        error_wp_exclusions:
+            'É provável que o arquivo warp-plus tenha sido colocado em quarentena devido a um alerta de falso positivo e detecção incorreta pelo antivírus, causando problemas na capacidade do programa de acessar a internet livremente.\nO programa pode adicionar o arquivo mencionado à lista de exclusões em alguns antivírus se o acesso for permitido. Isso deve ser feito?',
         error_wp_stopped: 'O arquivo warp-plus encontrou um problema ao rodar!',
         error_connection_failed: 'Não foi possível conectar-se a 1.1.1.1.',
-        error_country_failed: 'Não foi possível conectar-se ao país selecionado.'
+        error_country_failed: 'Não foi possível conectar-se ao país selecionado.',
+        error_singbox_failed_stop: 'Falha ao parar a Caixa de Canto!',
+        error_singbox_failed_start: 'Falha ao iniciar a Caixa de Canto!',
+        error_wp_reset_peer: 'A conexão com Cloudflare foi interrompida inesperadamente!',
+        error_failed_connection: 'Falha ao estabelecer conexão!',
+        error_canceled_by_user: 'A operação foi cancelada pelo usuário.',
+        error_helper_not_found:
+            'O arquivo auxiliar não foi encontrado junto ao pacote do aplicativo!',
+        error_singbox_ipv6_address:
+            'Seu sistema operacional não é compatível com IPv6. Por favor, vá até as configurações do túnel e mude o endereçamento para IPv4.',
+        error_local_date:
+            'Certifique-se de que a data e a hora do seu sistema estejam configuradas corretamente!'
     },
     about: {
         title: 'Sobre o Aplicativo',

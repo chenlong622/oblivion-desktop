@@ -20,16 +20,39 @@ export type settingsKeys =
     | 'rtt'
     | 'openAtLogin'
     | 'autoConnect'
+    | 'startMinimized'
     | 'reserved'
     | 'scanResult'
     | 'profiles'
     | 'forceClose'
     | 'shortcut'
     | 'dataUsage'
-    | 'asn';
+    | 'asn'
+    | 'closeHelper'
+    | 'singBoxMTU'
+    | 'singBoxGeoIp'
+    | 'singBoxGeoSite'
+    | 'singBoxGeoBlock'
+    | 'singBoxGeoNSFW'
+    | 'singBoxLog'
+    | 'singBoxStack'
+    | 'singBoxSniff'
+    | 'singBoxAddrType'
+    | 'singBoxUdpBlock'
+    | 'restartCounter'
+    | 'betaRelease'
+    | 'soundEffect'
+    | 'plainDns'
+    | 'DoH'
+    | 'testUrl';
 
 const date = new Date();
 const getTimeZone = date?.toString().toLowerCase();
+
+/*const platform =
+    typeof window !== 'undefined' && window.platformAPI
+        ? window.platformAPI.getPlatform()
+        : 'unknown';*/
 
 export const defaultSettings = {
     scan: true,
@@ -45,7 +68,7 @@ export const defaultSettings = {
     ipData: true,
     routingRules: '',
     autoSetProxy: true,
-    proxyMode: 'system',
+    proxyMode: 'tun',
     shareVPN: false,
     hostIP: '127.0.0.1',
     method: 'gool',
@@ -53,13 +76,26 @@ export const defaultSettings = {
     rtt: '1s',
     openAtLogin: false,
     autoConnect: false,
+    startMinimized: false,
     reserved: true,
     scanResult: '',
     profiles: '[]',
     forceClose: false,
-    shortcut: false,
+    shortcut: true,
     dataUsage: false,
-    asn: 'UNK'
+    asn: 'UNK',
+    closeHelper: true,
+    singBoxMTU: 9000,
+    singBoxGeoBlock: false,
+    singBoxGeoNSFW: false,
+    singBoxSniff: true,
+    singBoxUdpBlock: false,
+    restartCounter: 0,
+    betaRelease: false,
+    soundEffect: false,
+    testUrl: 'https://connectivity.cloudflareclient.com/cdn-cgi/trace',
+    plainDns: '',
+    DoH: ''
 };
 
 export const countries: { value: string; label: string }[] = [
@@ -104,17 +140,104 @@ export const languages: { value: string; label: string }[] = [
     { value: 'en', label: 'English' },
     { value: 'cn', label: '中文' },
     { value: 'ru', label: 'Русский' },
-    { value: 'de', label: 'Deutsch' },
     { value: 'tr', label: 'Türkçe' },
     { value: 'id', label: 'Indonesia' },
     { value: 'ar', label: 'العربية' },
     { value: 'pt', label: 'Português (Brasil)' },
-    { value: 'vi', label: 'Tiếng Việt' }
+    { value: 'vi', label: 'Tiếng Việt' },
+    { value: 'ur', label: 'اردو' }
 ];
 
 export const dnsServers: { value: string; label: string }[] = [
     { value: '1.1.1.1', label: 'Cloudflare' },
-    { value: '8.8.8.8', label: 'Google' },
-    { value: '94.140.14.14', label: 'Adguard' },
-    { value: '94.140.14.15', label: 'Adguard Family' }
+    { value: '1.1.1.2', label: 'Cloudflare Security' },
+    { value: '1.1.1.3', label: 'Cloudflare Family' },
+    { value: 'custom', label: 'Custom' }
+];
+
+export const singBoxGeoIp: { label: string; geoIp: string }[] = [
+    { label: 'None', geoIp: 'none' },
+    {
+        label: '🇮🇷 Iran',
+        geoIp: 'ir'
+    },
+    {
+        label: '🇨🇳 China',
+        geoIp: 'cn'
+    },
+    {
+        label: '🇷🇺 Russia',
+        geoIp: 'ru'
+    },
+    {
+        label: '🇦🇫 Afghanistan',
+        geoIp: 'af'
+    },
+    {
+        label: '🇹🇷 Turkey',
+        geoIp: 'tr'
+    },
+    {
+        label: '🇮🇩 Indonesia',
+        geoIp: 'id'
+    },
+    {
+        label: '🇧🇷 Brazil',
+        geoIp: 'br'
+    }
+];
+
+export const singBoxGeoSite: { label: string; geoSite: string }[] = [
+    { label: 'None', geoSite: 'none' },
+    {
+        label: '🇮🇷 Iran',
+        geoSite: 'ir'
+    },
+    {
+        label: '🇨🇳 China',
+        geoSite: 'cn'
+    },
+    {
+        label: '🇷🇺 Russia',
+        geoSite: 'category-ru'
+    }
+];
+
+export const singBoxLog: { value: string; label: string }[] = [
+    { value: 'disabled', label: 'Disabled' },
+    { value: 'trace', label: 'Trace' },
+    { value: 'debug', label: 'Debug' },
+    { value: 'info', label: 'Info' },
+    { value: 'warn', label: 'Warn' },
+    { value: 'error', label: 'Error' },
+    { value: 'fatal', label: 'Fatal' },
+    { value: 'panic', label: 'Panic' }
+];
+
+export const singBoxStack: { value: string; label: string }[] = [
+    { value: 'mixed', label: 'Mixed' },
+    { value: 'system', label: 'System' },
+    { value: 'gvisor', label: 'gVisor' }
+];
+
+export const singBoxAddrType: { value: string; label: string }[] = [
+    { value: 'v64', label: 'Automatic' },
+    { value: 'v4', label: 'IPv4' },
+    { value: 'v6', label: 'IPv6' }
+];
+
+export const defaultRoutingRules: { type: string; value: string }[] = [
+    { type: 'ip', value: '127.0.0.1' },
+    { type: 'domain', value: '*.ir' },
+    { type: 'domain', value: 'dolat.ir' },
+    { type: 'domain', value: 'apps.apple.com' },
+    { type: 'app', value: 'Figma' },
+    { type: 'domain', value: 'figma.com' },
+    { type: 'domain', value: 'github.com' },
+    { type: 'domain', value: 'objects.githubusercontent.com' },
+    { type: 'domain', value: 'meet.google.com' },
+    { type: 'domain', value: 'bargheman.com' },
+    { type: 'domain', value: 'digikala.com' },
+    { type: 'domain', value: 'web.whatsapp.com' },
+    { type: 'domain', value: 'aparat.com' }
 ];

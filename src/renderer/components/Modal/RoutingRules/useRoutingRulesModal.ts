@@ -3,6 +3,7 @@ import { settings } from '../../../lib/settings';
 import useTranslate from '../../../../localization/useTranslate';
 import { useStore } from '../../../store';
 import { settingsHaveChangedToast } from '../../../lib/toasts';
+import { defaultSettings, defaultRoutingRules } from '../../../../defaultSettings';
 
 interface RoutingRulesModalProps {
     isOpen: boolean;
@@ -16,8 +17,14 @@ const useRoutingRulesModal = (props: RoutingRulesModalProps) => {
     const { isOpen, onClose, routingRules, setRoutingRules } = props;
     const [routingRulesInput, setRoutingRulesInput] = useState<string>(routingRules);
     const [showModal, setShowModal] = useState<boolean>(isOpen);
+    const [proxyMode, setProxyMode] = useState<string>('');
 
-    useEffect(() => setShowModal(isOpen), [isOpen]);
+    useEffect(() => {
+        setShowModal(isOpen), [isOpen];
+        settings.get('proxyMode').then((value) => {
+            setProxyMode(typeof value === 'undefined' ? defaultSettings.proxyMode : value);
+        });
+    });
 
     const handleOnClose = useCallback(() => {
         setShowModal(false);
@@ -32,14 +39,20 @@ const useRoutingRulesModal = (props: RoutingRulesModalProps) => {
         }
         const lines = textareaContent.split('\n');
         const validEntriesSet = new Set<string>();
-        const entryRegex = /^(geoip|domain|ip|range):(.+)$/;
+        const entryRegex = /^(geoip|domain|ip|range|app):(.+)$/;
         const ipRegex = /^([0-9]{1,3}\.){3}[0-9]{1,3}$/;
         const ipRangeRegex = /^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}$/;
 
         lines.forEach((line) => {
             const trimmedLine = line.trim();
             if (trimmedLine) {
-                const lineWithoutQuotes = trimmedLine.replace(/['"]/g, '').replace(/ /g, '');
+                const lineWithoutQuotes = trimmedLine
+                    .replace(/['"]/g, '')
+                    .replace(/:\s+/g, ':')
+                    .replace(/و+/g, ',')
+                    .replace(/[\\/]/g, '')
+                    .replace(/\s*,\s*/g, ',')
+                    .replace(/,+/g, ',');
                 const entry = lineWithoutQuotes.endsWith(',')
                     ? lineWithoutQuotes.slice(0, -1)
                     : lineWithoutQuotes;
@@ -47,13 +60,19 @@ const useRoutingRulesModal = (props: RoutingRulesModalProps) => {
                 const match = cleanedEntry.match(entryRegex);
                 const ipMatch = cleanedEntry.match(ipRegex);
                 const ipRangeMatch = cleanedEntry.match(ipRangeRegex);
+                const isIpv6Like = /^ip:.*[:\[\]]/.test(cleanedEntry);
                 if (match || ipMatch || ipRangeMatch) {
-                    validEntriesSet.add(cleanedEntry);
+                    if (!isIpv6Like) {
+                        validEntriesSet.add(cleanedEntry);
+                    }
                 }
             }
         });
         const validEntries = Array.from(validEntriesSet);
-        return validEntries.length > 0 ? validEntries.join(',\n') : '';
+        const priorityEntries = validEntries.filter((entry) => entry.startsWith('domain:!'));
+        const otherEntries = validEntries.filter((entry) => !entry.startsWith('domain:!'));
+        const orderedEntries = [...priorityEntries, ...otherEntries];
+        return orderedEntries.length > 0 ? orderedEntries.join(',\n') : '';
     }, []);
 
     const onSaveModal = useCallback(() => {
@@ -112,7 +131,9 @@ const useRoutingRulesModal = (props: RoutingRulesModalProps) => {
     );
 
     const handleSetRoutingRulesSimple = useCallback(() => {
-        setRoutingRulesInput(`domain:dolat.ir,\ndomain:apple.com,\nip:127.0.0.1,\ndomain:*.ir`);
+        setRoutingRulesInput(
+            defaultRoutingRules.map((rule) => `${rule.type}:${rule.value}`).join(',\n')
+        );
     }, [setRoutingRulesInput]);
 
     return {
@@ -125,7 +146,8 @@ const useRoutingRulesModal = (props: RoutingRulesModalProps) => {
         onSaveModal,
         onUpdateKeyDown,
         routingRulesInput,
-        showModal
+        showModal,
+        proxyMode
     };
 };
 export default useRoutingRulesModal;

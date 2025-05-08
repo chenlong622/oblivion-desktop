@@ -27,9 +27,13 @@ npm-debug.log.*
 *.css.d.ts
 *.sass.d.ts
 *.scss.d.ts
+*.tsbuildinfo
 
 log.txt
 warp-plus*.zip
 assets/bin
 stuff
 ca.psiphon.PsiphonTunnel.tunnel-core
+oblivion-helper*.zip
+zag-netStats*.zip
+proxy-reset*.zip

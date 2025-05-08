@@ -23,13 +23,18 @@ export const createPacScript = async (hostIp: string, port: string | number) => 
     if (typeof routingRules === 'string' && routingRules !== '') {
         domainRules = routingRules
             .replace(/\n|<br>/g, '')
+            .replace(/app:[^,]+(,|$)/g, '')
             .split(',')
+            .filter((rule) => rule.trim() !== '')
             .map((rule) => {
                 const parts = rule.split(':');
+                const isException = parts[1].startsWith('!');
+                const value = isException ? parts[1].substring(1) : parts[1];
                 return {
                     type: parts[0],
-                    value: parts[1],
-                    regex: parts[1].startsWith('*')
+                    value,
+                    regex: value.startsWith('*'),
+                    forceProxy: isException
                 };
             });
     }
@@ -50,6 +55,9 @@ export const createPacScript = async (hostIp: string, port: string | number) => 
                 "use strict";
                 if (Object.keys(${JSON.stringify(domainRules)}).length > 0) {
                     for (const rule of ${JSON.stringify(domainRules)}) {
+                        if (rule.forceProxy && rule.type === "domain" && rule.value === host) {
+                            return "SOCKS5 ${hostIp}:${port}; SOCKS ${hostIp}:${port}";
+                        }
                         if (rule.type === "domain" && rule.value === host) {
                             return "DIRECT";
                         }
@@ -102,7 +110,7 @@ export const servePacScript = (port = 8087) => {
 
 export const killPacScriptServer = async () => {
     try {
-        await server.close();
+        server.close();
         log.info('pac script server closed.');
     } catch (error) {
         log.error(error);

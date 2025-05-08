@@ -8,8 +8,10 @@ const english: Language = {
         connected_confirm: 'Connected',
         disconnecting: 'Disconnecting ...',
         disconnected: 'Disconnected',
-        ip_check: 'Checking Ip ...',
-        keep_trying: 'Please wait a moment to try again...'
+        ip_check: 'Verifying IP ...',
+        keep_trying: 'Please wait before attempting again ...',
+        preparing_rulesets: 'Preparing rulesets ...',
+        downloading_rulesets_failed: 'Downloading rulesets failed.'
     },
     home: {
         title_warp_based: 'Warp Based',
@@ -23,18 +25,29 @@ const english: Language = {
         drawer_update_label: 'New Update',
         drawer_speed_test: 'Speed Test',
         drawer_about: 'About App',
-        drawer_lang: 'Language Change'
+        drawer_lang: 'Change Language',
+        drawer_singbox: 'Tunnel Settings'
     },
     toast: {
         ip_check_please_wait: 'Please wait a few seconds to retry the check!',
         ir_location:
-            'Cloudflare has connected to an IP with an Iranian location, which is different from your actual IP. You can use it to bypass filtering, but not sanctions. Don\'t worry! You can change the location in the settings using the "Gool" or "psiphon" option.',
+            'Cloudflare has connected to an Iranian IP (different from your actual IP). This can bypass filtering but not sanctions. You can change locations using "Gool" or "Psiphon" in settings.',
         btn_submit: 'Understood',
         copied: 'Copied!',
         cleared: 'The log has been cleared!',
         please_wait: 'Please Wait ...',
         offline: 'You Are Offline!',
-        settings_changed: 'Applying settings requires reconnecting.'
+        settings_changed: 'Applying settings requires reconnecting.',
+        hardware_usage: 'Enabling this option will increase hardware resource usage.',
+        config_added:
+            'The configuration has been successfully added, and to use it, you must click on the connection.',
+        profile_added: 'The endpoint has been successfully added to the profile.',
+        endpoint_added: 'The endpoint was successfully replaced.',
+        new_update:
+            'A new version of the app is available. Would you like to download and prepare it for installation?',
+        exit_pending:
+            'The application is completing its exit process; please wait a moment before launching it again.',
+        help_btn: 'Help'
     },
     settings: {
         title: 'Warp Settings',
@@ -46,7 +59,7 @@ const english: Language = {
         method_psiphon: 'Psiphon',
         method_psiphon_desc: 'Enable Psiphon',
         method_psiphon_location: 'Country',
-        method_psiphon_location_auto: 'Automatic',
+        method_psiphon_location_auto: 'Random',
         method_psiphon_location_desc: 'Select the desired country IP',
         endpoint: 'Endpoint',
         endpoint_desc: 'Combination of IP or domain name, along with port',
@@ -57,8 +70,8 @@ const english: Language = {
         proxy_mode: 'Configuration',
         proxy_mode_desc: 'Defining Proxy Settings',
         port: 'Proxy Port',
-        port_desc: 'Define application proxy port',
-        share_vpn: 'Share (LAN)',
+        port_desc: 'Set local proxy listening port',
+        share_vpn: 'Bind Address',
         share_vpn_desc: 'Share a proxy on the network',
         dns: 'DNS',
         dns_desc: 'Block ads & adult content',
@@ -75,12 +88,16 @@ const english: Language = {
         open_login_desc: 'Open at system startup',
         auto_connect: 'Auto Connection',
         auto_connect_desc: 'Connect when app opens',
+        start_minimized: 'Start Minimized',
+        start_minimized_desc: 'Minimize when the app opens',
         system_tray: 'System Tray',
         system_tray_desc: 'Not placing the program icon in the taskbar',
         force_close: 'Force Close',
         force_close_desc: 'Do not stay in the system tray upon exit',
         shortcut: 'Navigator',
         shortcut_desc: 'Shortcuts on the home page',
+        sound_effect: 'Sound effect',
+        sound_effect_desc: 'Plays sound on successful connection',
         restore: 'Restore',
         restore_desc: 'Apply default application settings',
         scanner: 'Scanner Settings',
@@ -98,27 +115,64 @@ const english: Language = {
         routing_rules_disabled: 'Disabled',
         routing_rules_items: 'Items',
         profile: 'Profile',
-        profile_desc: 'Endpoints saved by you'
+        profile_desc: 'Endpoints saved by you',
+        singbox: 'Tunnel Settings',
+        close_singbox: 'Stop operation',
+        close_singbox_desc: 'Automatically close sing-box on disconnect',
+        close_helper: 'Stop helper',
+        close_helper_desc: 'Automatically close helper on exit',
+        mtu: 'MTU Value',
+        mtu_desc: 'Set the Maximum Transmission Unit',
+        geo_block: 'Blocking',
+        geo_block_desc: 'Ads, Malware, Phishing & Crypto Miners',
+        geo_rules_ip: 'IP Routing',
+        geo_rules_ip_desc: 'Applying GeoIP rules',
+        geo_rules_site: 'Web Routing',
+        geo_rules_site_desc: 'Applying GeoSite rules',
+        geo_nsfw_block: 'Content Filter',
+        geo_nsfw_block_desc: 'Block NSFW websites',
+        more_helper: 'Assistant Settings',
+        singbox_log: 'Logging',
+        singbox_log_desc: 'Set Log Level',
+        singbox_stack: 'Stack',
+        singbox_stack_desc: 'Set Stack Type',
+        singbox_sniff: 'Sniff',
+        singbox_sniff_desc: 'Enable Sniffing & Override Destination',
+        singbox_addressing: 'Addressing',
+        singbox_addressing_desc: 'Set Interface Address Type',
+        singbox_udp_block: 'Block UDP',
+        singbox_udp_block_desc: 'Completely block all UDP traffic',
+        more_duties: 'Duties',
+        beta_release: 'Beta Update',
+        beta_release_desc: 'Stay informed about pre-release versions'
     },
     tabs: {
         home: 'Connect',
         warp: 'Warp',
         network: 'Network',
         scanner: 'Scanner',
-        app: 'App'
+        app: 'App',
+        singbox: 'Tunnel'
     },
     modal: {
         endpoint_title: 'Endpoint',
         license_title: 'License',
         license_desc:
             'The program does not necessarily need a Warp license to run, but if you wish, you can enter your license here.',
-        license_clear: 'Clear',
+        form_clear: 'Clear',
+        test_url_title: 'Test Url',
+        test_url_desc: 'Connectivity test address',
+        test_url_update: 'Receive suggestions',
         port_title: 'Proxy Port',
         restore_title: 'Restore Changes',
         restore_desc:
             'By confirming the operation of restoring the changes, all program settings will return to the default state and your connection will be disconnected.',
         routing_rules_sample: 'Sample',
-        endpoint_default: 'Default',
+        routing_rules_alert_tun:
+            'Only the routing rules for domain, ip & app will affect the Tun configuration.',
+        routing_rules_alert_system:
+            'Except for the app routing rule, other rules will affect the System Proxy configuration.',
+        form_default: 'Default',
         endpoint_suggested: 'Suggested',
         endpoint_latest: 'Latest',
         endpoint_update: 'Receive suggested endpoints',
@@ -126,7 +180,11 @@ const english: Language = {
         profile_title: 'Profile',
         profile_name: 'Title',
         profile_endpoint: 'Endpoint',
-        profile_limitation: (value) => `You can add a maximum of ${value} endpoints.`,
+        profile_limitation: (value) => `Maximum ${value} endpoints allowed.`,
+        mtu_title: 'MTU Value',
+        mtu_desc:
+            'Maximum Transmission Unit (MTU) refers to the maximum size of data packets, which should be set between 1000 and 9999.',
+        custom_dns_title: 'Custom DNS',
         confirm: 'I confirm',
         update: 'Update',
         cancel: 'Cancel'
@@ -138,27 +196,39 @@ const english: Language = {
         error_too_many_connected: 'The license usage limit is filled; Remove it.',
         error_access_denied: 'Run the program as Run as Administrator.',
         error_failed_set_endpoint: 'Check or replace the endpoint value, or try again.',
-        error_warp_identity: 'Authentication error in cloudflare; Try again.',
+        error_warp_identity: 'Authentication error in cloudflare!',
         error_script_failed: 'The program encountered an error; Try again.',
         error_object_null: 'The program encountered an error; Try again.',
         error_port_already_in_use: (value) =>
             `Port ${value} is being used by another program; Change it.`,
         error_port_socket: 'Use another port.',
+        error_port_restart: 'The port is in use; restarting ...',
         error_unknown_flag: 'An invalid command was executed in the background.',
         error_deadline_exceeded: 'Connection timed out; Try again.',
         error_configuration_encountered: 'Proxy configuration encountered an error!',
         error_desktop_not_supported: 'Desktop environment is not supported!',
         error_configuration_not_supported:
             'Proxy configuration is not supported in your operating system, but you can use Warp Proxy manually.',
-        error_configuring_proxy: (value) => `Error configuring proxy for ${value}!`,
+        error_configuring_proxy: (value) => `Failed to configure proxy for ${value}!`,
         error_wp_not_found: 'The warp-plus file is not located alongside the application package!',
+        error_wp_exclusions:
+            'The warp-plus file has likely been quarantined due to a false positive alert and incorrect detection by the antivirus, causing issues with the program’s ability to access the internet freely.\nThe program can add the mentioned file to the exclusions list in certain antiviruses if access permission is granted. Should this be done?',
         error_wp_stopped: 'The warp-plus file has encountered an issue running!',
         error_connection_failed: 'Connection to 1.1.1.1 was not possible.',
-        error_country_failed: 'Cannot connect to the selected country.'
+        error_country_failed: 'Cannot connect to the selected country.',
+        error_singbox_failed_stop: 'Failed to stop Sing-Box!',
+        error_singbox_failed_start: 'Failed to start Sing-Box!',
+        error_wp_reset_peer: 'The connection to Cloudflare was unexpectedly interrupted!',
+        error_failed_connection: 'Failed to establish connection!',
+        error_canceled_by_user: 'The operation was canceled by the user.',
+        error_helper_not_found: 'The helper file is not located alongside the application package!',
+        error_singbox_ipv6_address:
+            'Your OS does not support IPv6. Please go to the tunnel settings and change the addressing to IPv4.',
+        error_local_date: "Make sure your system's date and time are set correctly!"
     },
     about: {
         title: 'About App',
-        desc: 'This program is an unofficial, but reliable version of the Oblivion app for Windows, Linux, and Mac.\nThe Oblivion Desktop program is modeled after the user interface of the original version developed by Yousef Ghobadi. It was written, it was prepared for the purpose of free access to the Internet, and any name change or commercial use of it is not allowed.',
+        desc: "This is an unofficial but reliable desktop version of Oblivion for Windows, Linux, and macOS.\nModeled after Yousef Ghobadi's original interface, this software promotes free internet access. Name changes or commercial use are prohibited.",
         slogan: 'Internet, for all or none!'
     },
     systemTray: {
@@ -172,23 +242,21 @@ const english: Language = {
         settings_scanner: 'Scanner',
         settings_app: 'Application',
         about: 'About',
-        log: 'Log',
-        speed_test: 'Speed test',
+        log: 'Logs',
+        speed_test: 'Speed Test',
         exit: 'Exit'
     },
     update: {
         available: 'Update Available',
-        available_message: (value) =>
-            `A new version of the ${value} is available. Do you want to update now?`,
+        available_message: (value) => `New ${value} version available. Update now?`,
         ready: 'Update Ready',
-        ready_message: (value) =>
-            `A new version of the ${value} is ready. It will be installed after a restart. Do you want to restart now?`
+        ready_message: (value) => `${value} update prepared. Restart to install now?`
     },
     speedTest: {
         title: 'Speed Test',
         initializing: 'Speed test initializing ...',
-        click_start: 'Click the button to start the speed test',
-        error_msg: 'An error occurred during the speed test. Please try again.',
+        click_start: 'Click to begin speed test',
+        error_msg: 'Speed test failed. Please try again.',
         server_unavailable: 'Speed test server unavailable',
         download_speed: 'Download Speed',
         upload_speed: 'Upload Speed',

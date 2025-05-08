@@ -9,7 +9,9 @@ const persian: Language = {
         disconnecting: 'قطع ارتباط ...',
         disconnected: 'متصل نیستید',
         ip_check: 'دریافت اطلاعات ...',
-        keep_trying: 'جهت تکرار تلاش، کمی صبر کنید ...'
+        keep_trying: 'جهت تکرار تلاش، کمی صبر کنید ...',
+        preparing_rulesets: 'درحال آماده‌سازی مجموعه قوانین ...',
+        downloading_rulesets_failed: 'دانلود مجموعه قوانین با خطا مواجه شد.'
     },
     home: {
         title_warp_based: 'بر پایه وارپ',
@@ -23,7 +25,8 @@ const persian: Language = {
         drawer_update_label: 'نسخه جدید',
         drawer_speed_test: 'تست سرعت',
         drawer_about: 'درباره برنامه',
-        drawer_lang: 'تغییر زبان'
+        drawer_lang: 'تغییر زبان',
+        drawer_singbox: 'تنظیمات تانل'
     },
     toast: {
         ip_check_please_wait: 'برای بررسی مجدد چندثانیه دیگر تلاش کنید!',
@@ -34,7 +37,15 @@ const persian: Language = {
         cleared: 'لاگ پاکسازی شد!',
         please_wait: 'کمی صبر کنید ...',
         offline: 'به اینترنت متصل نیستید!',
-        settings_changed: 'اعمال تنظیمات نیازمند اتصال مجدد می\u200Cباشد.'
+        settings_changed: 'اعمال تنظیمات نیازمند اتصال مجدد می\u200Cباشد.',
+        hardware_usage: 'فعال نگه‌داشتن این‌گزینه موجب افزایش مصرف منابع سخت‌افزار می‌گردد.',
+        config_added: 'کانفیگ به درستی اضافه شده و برای استفاده از آن باید بر روی اتصال بزنید.',
+        profile_added: 'اندپوینت به درستی به پروفایل اضافه شد.',
+        endpoint_added: 'اندپوینت به درستی جایگزین شد.',
+        new_update: 'نسخه جدیدی از برنامه در دسترس است. آن‌را دریافت و آماده نصب کنم؟',
+        exit_pending:
+            'برنامه درحال تکمیل فرایند خروج خود می‌باشد؛ برای اجرای مجدد آن کمی صبر کنید.',
+        help_btn: 'راهنما'
     },
     settings: {
         title: 'تنظیمات وارپ',
@@ -46,7 +57,7 @@ const persian: Language = {
         method_psiphon: 'سایفون',
         method_psiphon_desc: 'فعالسازی Psiphon',
         method_psiphon_location: 'انتخاب کشور',
-        method_psiphon_location_auto: 'Automatic',
+        method_psiphon_location_auto: 'Random',
         method_psiphon_location_desc: 'انتخاب آی\u200Cپی کشور موردنظر',
         endpoint: 'اندپوینت',
         endpoint_desc: 'ترکیبی از IP یا نام دامنه، به\u200Cهمراه پورت',
@@ -58,7 +69,7 @@ const persian: Language = {
         proxy_mode_desc: 'انتخاب نحوه تنظیم پروکسی',
         port: 'پورت پروکسی',
         port_desc: 'تعیین پورت پروکسی برنامه',
-        share_vpn: 'اتصال از LAN',
+        share_vpn: 'آدرس اتصال',
         share_vpn_desc: 'اشتراک\u200Cگذاری پروکسی بر روی شبکه',
         dns: 'انتخاب DNS',
         dns_desc: 'محدودسازی تبلیغات و محتوای بزرگسال',
@@ -75,12 +86,16 @@ const persian: Language = {
         open_login_desc: 'بازشدن هنگام روشن\u200Cشدن سیستم',
         auto_connect: 'اتصال خودکار',
         auto_connect_desc: 'متصل‌شدن هنگام بازشدن برنامه',
+        start_minimized: 'اجرای کمینه',
+        start_minimized_desc: 'کمینه‌شدن هنگام بازشدن برنامه',
         system_tray: 'مخفی\u200Cسازی',
         system_tray_desc: 'قرار نگرفتن آیکون برنامه در تسک\u200Cبار',
         force_close: 'بستن اجباری',
         force_close_desc: 'با خروج در نوار اعلان قرار نگیرد',
         shortcut: 'پیمایشگر',
         shortcut_desc: 'میانبرها در صفحه نخست',
+        sound_effect: 'جلوه صوتی',
+        sound_effect_desc: 'پخش صدا هنگام اتصال موفق',
         restore: 'بازگردانی',
         restore_desc: 'اعمال تنظیمات پیشفرض برنامه',
         scanner: 'تنظیمات اسکنر',
@@ -99,27 +114,64 @@ const persian: Language = {
         routing_rules_disabled: 'غیرفعال',
         routing_rules_items: 'مورد',
         profile: 'پروفایل',
-        profile_desc: 'اندپوینت‌های ذخیره‌شده توسط شما'
+        profile_desc: 'اندپوینت‌های ذخیره‌شده توسط شما',
+        singbox: 'تنظیمات تانل',
+        close_singbox: 'توقف عملیات',
+        close_singbox_desc: 'بستن خودکار سینگ‌باکس هنگام لغو اتصال',
+        close_helper: 'توقف دستیار',
+        close_helper_desc: 'بستن خودکار دستیار هنگام خروج',
+        mtu: 'مقدار MTU',
+        mtu_desc: 'تعیین حداکثر واحد انتقال',
+        geo_block: 'مسدودسازی',
+        geo_block_desc: 'تبلیغات، بدافزار، فیشینگ و ماینرهای رمزارز',
+        geo_rules_ip: 'مسیریابی IP',
+        geo_rules_ip_desc: 'به‌کارگیری قوانین GeoIP',
+        geo_rules_site: 'مسیریابی وب',
+        geo_rules_site_desc: 'به‌کارگیری قوانین GeoSite',
+        geo_nsfw_block: 'فیلتر محتوا',
+        geo_nsfw_block_desc: 'مسدودکردن وب‌سایت‌های NSFW',
+        more_helper: 'تنظیمات دستیار',
+        singbox_log: 'گزارش‌دهی',
+        singbox_log_desc: 'تنظیم سطح Log',
+        singbox_stack: 'چینش',
+        singbox_stack_desc: 'تنظیم نوع Stack',
+        singbox_sniff: 'تحلیل بسته‌ها',
+        singbox_sniff_desc: 'فعالسازی Sniff و بازنویسی مقصد',
+        singbox_addressing: 'آدرس‌دهی',
+        singbox_addressing_desc: 'تنظیم نوع آدرس رابط',
+        singbox_udp_block: 'بستن UDP',
+        singbox_udp_block_desc: 'مسدودسازی کامل ترافیک UDP',
+        more_duties: 'وظایف',
+        beta_release: 'بروزرسانی بتا',
+        beta_release_desc: 'اطلاع از نسخه‌های پیش‌ازانتشار'
     },
     tabs: {
         home: 'اتصال',
         warp: 'وارپ',
         network: 'شبکه',
         scanner: 'اسکنر',
-        app: 'برنامه'
+        app: 'برنامه',
+        singbox: 'تانل'
     },
     modal: {
         endpoint_title: 'اندپوینت',
         license_title: 'لایسنس',
         license_desc:
             'برنامه برای اجرا لزوماً به لایسنس وارپ نیاز نداشته، اما درصورت تمایل می\u200Cتوانید لایسنس خود را اینجا وارد کنید.',
+        form_clear: 'حذف',
+        test_url_title: 'مسیر تست',
+        test_url_desc: 'آدرس اینترنتی تست اتصال',
+        test_url_update: 'دریافت پیشنهادات',
         port_title: 'پورت پروکسی',
-        license_clear: 'حذف',
         restore_title: 'بازگردانی تغییرات',
         restore_desc:
             'با تایید عملیات بازگردانی تغییرات، تمامی تنظیمات برنامه به\u200Cحالت پیشفرض بازگشته و اتصال شما قطع می\u200Cگردد.',
         routing_rules_sample: 'نمونه',
-        endpoint_default: 'پیشفرض',
+        routing_rules_alert_tun:
+            'فقط قوانین مسیریابی domain, ip و app بر روی پیکربندی Tun اثرگذار خواهند بود.',
+        routing_rules_alert_system:
+            'به‌جز قانون مسیریابی app، سایر قوانین بر روی پیکربندی System Proxy اثرگذار هستند.',
+        form_default: 'پیشفرض',
         endpoint_suggested: 'پیشنهادی',
         endpoint_latest: 'اخیر',
         endpoint_update: 'دریافت اندپوینت‌های پیشنهادی',
@@ -129,6 +181,10 @@ const persian: Language = {
         profile_endpoint: 'اندپوینت',
         profile_limitation: (value) => `حداکثر می‌توانید ${value} اندپوینت اضافه نمایید.`,
         confirm: 'تایید می\u200Cکنم',
+        mtu_title: 'مقدار MTU',
+        mtu_desc:
+            'حداکثر واحد انتقال یا MTU، به حداکثر اندازه بسته‌های داده اشاره دارد، که باید بین ۱۰۰۰ تا ۹۹۹۹ تنظیم شوند.',
+        custom_dns_title: 'مقدار DNS',
         update: 'بروزرسانی',
         cancel: 'انصراف'
     },
@@ -140,12 +196,13 @@ const persian: Language = {
         error_access_denied: 'برنامه را به‌صورت Run as Administrator اجرا کنید.',
         error_failed_set_endpoint:
             'خطای تنظیم اندپوینت؛ مقدار آن‌را بررسی کرده یا دوباره تلاش کنید.',
-        error_warp_identity: 'خطای احراز هویت در کلودفلر؛ دوباره تلاش کنید.',
+        error_warp_identity: 'خطای احراز هویت در کلودفلر!',
         error_script_failed: 'برنامه با خطا مواجه شد؛ دوباره تلاش کنید.',
         error_object_null: 'برنامه با خطا مواجه شد؛ دوباره تلاش کنید.',
         error_port_already_in_use: (value) =>
             `پورت ${value} توسط برنامه دیگری درحال استفاده است؛ آن‌را تغییر دهید.`,
         error_port_socket: 'از یک پورت دیگر استفاده نمایید.',
+        error_port_restart: 'پورت درگیر است؛ درحال راه‌اندازی مجدد ...',
         error_unknown_flag: 'یک دستور نادرست در پس‌زمینه اجرا شده است.',
         error_deadline_exceeded: 'مهلت اتصال پایان یافت؛ دوباره تلاش کنید.',
         error_configuration_encountered: 'پیکربندی پروکسی با خطا مواجه شد!',
@@ -154,9 +211,20 @@ const persian: Language = {
             'پیکربندی پروکسی در سیستم عامل شما پشتیبانی نمی‌شود، اما می‌توانید به‌صورت دستی از پروکسی وارپ استفاده کنید.',
         error_configuring_proxy: (value) => `خطای پیکربندی پروکسی برای ${value}!`,
         error_wp_not_found: `فایل warp-plus در کنار بسته برنامه وجود ندارد!`,
+        error_wp_exclusions:
+            'احتمالا فایل وارپ‌پلاس اشتباها به‌دلیل اعلان فالس پازیتیو و تشخیص اشتباه آنتی‌ویروس قرنطینه شده و عملکرد برنامه رو برای دسترسی آزاد به اینترنت دچار مشکل کرده.\nبرنامه می‌تونه درصورت اعطای سطح دسترسی، فایل مذکور رو در برخی‌از آنتی‌ویروس‌ها به لیست استثنائات اضافه کنه. انجام بشه؟',
         error_wp_stopped: `فایل warp-plus برای اجرا با مشکل مواجه است!`,
         error_connection_failed: 'اتصال به 1.1.1.1 امکان‌پذیر نبود.',
-        error_country_failed: 'امکان اتصال به کشور انتخابی وجود ندارد.'
+        error_country_failed: 'امکان اتصال به کشور انتخابی وجود ندارد.',
+        error_singbox_failed_stop: 'متوقف‌کردن سینگ‌باکس با خطا مواجه شد!',
+        error_singbox_failed_start: 'فعال‌کردن سینگ‌باکس با خطا مواجه شد!',
+        error_wp_reset_peer: 'اتصال به کلودفلر به‌طور غیرمنتظره قطع شد!',
+        error_failed_connection: 'اتصال موفقیت‌آمیز نبود!',
+        error_canceled_by_user: 'عملیات توسط کاربر لغو شد.',
+        error_helper_not_found: 'فایل هلپر در کنار بسته برنامه یافت نشد!',
+        error_singbox_ipv6_address:
+            'سیستم‌عامل شما از IPv6 پشتیبانی نمی‌کند؛ به تنظیمات تانل رفته و آدرس‌دهی را به IPv4 تغییر دهید.',
+        error_local_date: 'از تنظیم بودن تاریخ و ساعت سیستم‌عامل اطمینان حاصل کنید!'
     },
     about: {
         title: 'درباره برنامه',

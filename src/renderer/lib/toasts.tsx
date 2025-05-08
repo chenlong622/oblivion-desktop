@@ -3,13 +3,14 @@ import { Language } from '../../localization/type';
 
 const defaultToastStyle = {
     fontSize: '13px',
+    lineHeight: '22px',
     borderRadius: '10px',
     background: '#333',
     color: '#fff'
 };
 
 export const defaultToast = (msg = '', id = 'ID', duration = 5000) => {
-    toast(msg, {
+    toast(<div dangerouslySetInnerHTML={{ __html: msg }}></div>, {
         id: id,
         duration: duration,
         style: defaultToastStyle
@@ -17,6 +18,21 @@ export const defaultToast = (msg = '', id = 'ID', duration = 5000) => {
     setTimeout(() => {
         toast.remove(id);
     }, duration + 200);
+};
+
+export const defaultToastWithHelp = (
+    msg = '',
+    linkRef = '',
+    linkText = '',
+    id = 'ID',
+    duration = 7000
+) => {
+    let text = msg;
+    if (linkRef !== '') {
+        //text += `<div class="clearfix"></div>`;
+        text += `<a href="${linkRef}" class="toastHelp" target="_blank">${linkText}</a>`;
+    }
+    defaultToast(text, id, duration);
 };
 
 export const defaultToastWithSubmitButton = (
